@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import users.Pessoa;
-import users.PessoaDao.ConnectionFactory;
+import ConnectionFactory.ConnectionFactory;
+import users.Cliente;
+import users.Funcionario;
 import users.PessoaDao.PessoaDao;
 
 /**
@@ -47,20 +49,22 @@ public class LoginServlet extends HttpServlet {
             ConnectionFactory conn = new ConnectionFactory();
             PessoaDao uDao = new PessoaDao(conn);
         if(loginValido(login,pass,request,uDao)){
-        
-            HttpSession session = request.getSession();
-            session.setAttribute("logado", login);
-            request.setAttribute("usuarioDao",uDao);
-            response.sendRedirect("PortalServlet");
+
+            String page = (String)request.getAttribute("page"); 
+            response.sendRedirect(page);
             
         }else{
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
             request.setAttribute("msg", "Usuario ou senha incorretos");
-            request.setAttribute("page", "./login.jsp");
+            request.setAttribute("page", "login.jsp");
             rd.forward(request, response);
         }
         } catch (ClassNotFoundException ex) {
             message = ex.getMessage();
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            request.setAttribute("msg","Erro ao tentar processar a solicitude "+message);
+            request.setAttribute("page", "login.jsp");
+            rd.forward(request, response);
         }
         
     }
@@ -110,15 +114,28 @@ public class LoginServlet extends HttpServlet {
          try{
                 List<Pessoa> users = uDao.getLista();
                 if (users.isEmpty()) return false;
-                
+             
                 for(Pessoa user : users){
-                    System.out.println(user.getNome());
-                if(user.getNick().equalsIgnoreCase(login)){
-                    if(pass.equalsIgnoreCase(user.getSenha())){
-                    HttpSession session = request.getSession();
-                    session.setAttribute("logado", user.getNick());
-                    return true;
-                    }
+                    
+                    if(user.getNick().equalsIgnoreCase(login)){
+                        if(pass.equalsIgnoreCase(user.getSenha())){
+                            if(user.getType().equalsIgnoreCase("U")){
+                            Cliente cliente  = new Cliente(user);
+                            HttpSession session = request.getSession();
+                            session.setAttribute("user", cliente);
+                            session.setAttribute("logado", cliente.getNick());
+                            request.setAttribute("page","cliente/PortalUser.jsp");                          
+                            return true;
+                            }else if (user.getType().equalsIgnoreCase("F")){
+                            Funcionario funcionario  = new Funcionario(user);
+                            HttpSession session = request.getSession();
+                            session.setAttribute("user", funcionario);
+                            session.setAttribute("logado", funcionario.getNick());
+                            request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
+                            return true;
+                            }
+                            
+                        }
                     }
                 }
                 return false;

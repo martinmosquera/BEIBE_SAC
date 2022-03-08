@@ -5,6 +5,7 @@
  */
 package users.PessoaDao;
 
+import ConnectionFactory.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -138,7 +139,7 @@ public class PessoaDao {
             Date nova = Date.valueOf(now);
             
             stmtAtualiza.setDate(12, nova);
-            stmtAtualiza.setInt(12, user.getId());
+            stmtAtualiza.setInt(13, user.getId());
             
             stmtAtualiza.executeUpdate();
         } finally{

@@ -27,14 +27,14 @@
             </div>
             <hr>
             <div class="row">
-                <form class="col-8 form-group" method="post" action="RegisterServlet">
+                <form class="col-8 form-group" method="post" action="../RegisterServlet">
                     <div class="form-group">
                         <label for="nick">Nick Name:</label>
                         <input class="form-control" type="text" name="nick" placeholder="Nick Name">
                     </div>
                     <div class="form-group">
-                        <label for="name">Nome Completo:</label>
-                        <input class="form-control" type="text" name="name" placeholder="Nome">
+                        <label for="nome">Nome Completo:</label>
+                        <input class="form-control" type="text" name="nome" placeholder="Nome">
                     </div>
                     <div class="form-group">
                         <label for="cpf">CPF:</label>
@@ -45,8 +45,8 @@
                         <input class="form-control" type="email" name="email" placeholder="Email">
                     </div>
                     <div class="form-group">
-                        <label for="endereco">Endereço - Rua:</label>
-                        <input class="form-control" type="text" name="endereco" placeholder="Rua">
+                        <label for="rua">Endereço - Rua:</label>
+                        <input class="form-control" type="text" name="rua" placeholder="Rua">
                     </div>
                     <div class="form-group">
                         <label for="num">Numero:</label>
@@ -77,8 +77,8 @@
                         <input class="form-control" type="text" name="tel" placeholder="Telefone">
                     </div>
                     <div class="form-group">
-                        <label for="pass">Password</label>
-                        <input class="form-control" type="password" name="pass" placeholder="Senha">
+                        <label for="senha">Password</label>
+                        <input class="form-control" type="password" name="senha" placeholder="Senha">
                     </div>
                     <hr>
                     <div class="form-group col-2">

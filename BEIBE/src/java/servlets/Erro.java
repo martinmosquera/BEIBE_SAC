@@ -47,7 +47,8 @@ public class Erro extends HttpServlet {
             out.println("</head>");
             out.println("<body class=\"container\">");
             out.println("<h1>" + request.getAttribute("msg") + "</h1>");
-            out.println("<a href=\"login.jsp\"><button class=\"btn-primary\">Voltar</button></a>");
+            String page = (String)request.getAttribute("page");
+            out.println("<a href=\""+page+"\"><button class=\"btn-primary\">Voltar</button></a>");
             out.println("</body>");
             out.println("</html>");
         }

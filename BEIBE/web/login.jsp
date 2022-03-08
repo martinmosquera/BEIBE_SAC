@@ -41,7 +41,7 @@
                         <input type="submit" class="form-control btn-primary" value="Entrar">
                     </div>
                 </form>
-                <a href="register.jsp">Faz teu Registro</a>
+                <a href="cliente/register.jsp">Faz teu Registro</a>
             </div>
         </div>
         <footer class="row justify-content-center">

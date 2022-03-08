@@ -5,11 +5,13 @@
  */
 package users;
 
+import java.io.Serializable;
+
 /**
  *
  * @author dell
  */
-public class Pessoa {
+public class Pessoa implements Serializable{
     private int id;
     private String nick;
     private String nome;

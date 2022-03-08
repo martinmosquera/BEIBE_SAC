@@ -1,4 +1,4 @@
-package users.PessoaDao;
+package ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

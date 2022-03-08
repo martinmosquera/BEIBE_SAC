@@ -7,23 +7,18 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import ConnectionFactory.ConnectionFactory;
-import users.Cliente;
-import users.PessoaDao.PessoaDao;
 
 /**
  *
  * @author dell
  */
-@WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
-public class RegisterServlet extends HttpServlet {
+@WebServlet(name = "CriaAtendimento", urlPatterns = {"/CriaAtendimento"})
+public class CriaAtendimento extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,29 +32,18 @@ public class RegisterServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-            Cliente user = new Cliente(request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha"),"U");
-           try{
-                Class.forName("com.mysql.jdbc.Driver");
-            ConnectionFactory conn = new ConnectionFactory();
-            PessoaDao uDao = new PessoaDao(conn);
-            uDao.inserir(user);
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            session.setAttribute("logado", user.getNick());
-            session.setAttribute("type",user.getType());
-            response.sendRedirect("cliente/PortalUser.jsp");
-            
-           }catch(Exception e){
-             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
-            request.setAttribute("msg", "Usuario ou senha incorretos");
-            request.setAttribute("page", "login.jsp");
-            rd.forward(request, response);   
-           }
-           
-            
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet CriaAtendimento</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet CriaAtendimento at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
