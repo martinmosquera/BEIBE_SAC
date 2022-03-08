@@ -16,40 +16,33 @@
         <link href="./assets/css/style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
+        <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="30" class="d-inline-block align-top" alt="">
+            <a href="./" class="navbar-nav">Home</a>
+            <a href="sobre.jsp">Sobre</a>
+            <a href="login.jsp">Login</a>
+        </nav>
         <div class="container">
-            <div class="menu row">
-                <div>
-                    <a href="./">Home</a>
-                    <a href="sobre.jsp">Sobre</a>
-                    <a href="login.jsp">Login</a>
-                </div>
-                
-            </div>
-            <hr>
-            <div class="row">
-                <form class="col-5 form-group" method="post" action="LoginServlet">
-                    <div class="form-group">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <form class="form-group" method="post" action="LoginServlet">
+                    <div class="form-group mb-2">
                         <label for="user">Login</label>
                         <input class="form-control" type="text" name="user" placeholder="Usuario">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label for="pass">Password</label>
                         <input class="form-control" type="password" name="pass" placeholder="Senha">
                     </div>
+                    <a href="cliente/register.jsp">Faz teu Registro</a>
                     <hr>
-                    <div class="form-group col-2">
+                    <div class="form-group">
                         <input type="submit" class="form-control btn-primary" value="Entrar">
                     </div>
                 </form>
-                <a href="cliente/register.jsp">Faz teu Registro</a>
             </div>
         </div>
-        <footer class="row justify-content-center">
-            <div class="col-2">
-                <p >Rua do Embuste, 1313</p>
-                <p>Curitiba, PR, 13131-313</p>
-                <p>(41) 9 1313-1313</p>
-            </div>
+        <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">
+                <p style="margin-left:50px">Rua do Embuste, 1313 - Curitiba, PR, 13131-313 | (41) 9 1313-1313</p>
         </footer>
     </body>
 </html>
