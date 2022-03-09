@@ -42,7 +42,7 @@ public class AtendimentoDao {
     private final String update = "update atendimento set funcionario_id=?,status=?,solucao=? WHERE atendimento_id=?";
     private final String delete = "delete from atendimento WHERE atendimento_id=?";
     private final String selectforcliente = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao from atendimento WHERE cliente_id=?";
-    private final String selectforfuncionario = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao from atendimento WHERE funcionario_id=?";
+    private final String selectforfuncionario = "select * from atendimento WHERE funcionario_id=?";
     
     public AtendimentoDao(ConnectionFactory conFactory) {
         this.connectionFactory = conFactory;
@@ -110,7 +110,7 @@ public class AtendimentoDao {
         
     }
 
-    public List<Atendimento> getListaFuncionario(Funcionario funcionario,ProdutoDao pDao) throws SQLException{
+    public List<Atendimento> getListaFuncionario(Funcionario funcionario) throws SQLException{
         Connection connection=connectionFactory.getConnection();
         ResultSet rs = null;
         Produto pr = null;
@@ -123,14 +123,13 @@ public class AtendimentoDao {
             while (rs.next()) {
                 int funcionario_id = rs.getInt("funcionario_id");
                 if( funcionario_id == funcionario.getId()){
-                int idA = rs.getInt("atendimento_id");
-                Timestamp tmst = rs.getTimestamp("data");
-                String status = rs.getString("status");
-                int produto_id = rs.getInt("produto_id");
-                String type = rs.getString("type");
-                String descricao = rs.getString("descricao");
-//              
-                atendimentos.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));           
+                    int idA = rs.getInt("atendimento_id");
+                    Timestamp tmst = rs.getTimestamp("data");
+                    String status = rs.getString("status");
+                    String type = rs.getString("type");
+                    String descricao = rs.getString("descricao");
+    //              
+                    atendimentos.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));           
                 }
                 
             }

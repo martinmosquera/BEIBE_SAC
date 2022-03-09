@@ -20,6 +20,7 @@ import ConnectionFactory.ConnectionFactory;
 import atendimento.Atendimento;
 import atendimento.AtendimentoDao.AtendimentoDao;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import produto.Produto;
@@ -58,7 +59,7 @@ public class LoginServlet extends HttpServlet {
             AtendimentoDao aDao = new AtendimentoDao(conn);
             ProdutoDao pDao = new ProdutoDao(conn);
             
-        if(loginValido(login,pass,request,uDao,aDao,pDao)){
+        if(loginValido(login,pass,request,response,uDao,aDao,pDao)){
             String page = (String)request.getAttribute("page"); 
             response.sendRedirect(page);
             
@@ -125,7 +126,7 @@ public class LoginServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean loginValido(String login, String pass,HttpServletRequest request,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao) {
+    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao) {
         
         
          try{
@@ -149,31 +150,45 @@ public class LoginServlet extends HttpServlet {
                             session.setAttribute("logado", cliente.getNick());
                             request.setAttribute("page","cliente/PortalUser.jsp");                          
                             return true;
-                            }else if (user.getType().equalsIgnoreCase("F")){
+                        }else if (user.getType().equalsIgnoreCase("F")){
                             
-                                Funcionario funcionario  = new Funcionario(user);
-                                List<Atendimento> lista;
+                            Funcionario funcionario  = new Funcionario(user);
+                            List<Atendimento> listaTotal;
+                            try{
+
                                 List<Produto> lp = pDao.Listar();
-                                lista = aDao.getListaFuncionario(funcionario,pDao);
+                                listaTotal = aDao.getListaFuncionario(funcionario);
+    //                            if(lista.size() >0)
                                 funcionario.setAtendimentos(lista);
-                                
+                                List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
+                                for(Atendimento a : listaTotal){
+                                    if(a.getStatus().equalsIgnoreCase("aberto"))
+                                        listaAbertos.add(a);
+                                }
                                 HttpSession session = request.getSession();
                                 session.setAttribute("produtos", lp);
-                                session.setAttribute("atendimentos", lista);
+                                session.setAttribute("atendimentosAbertos", listaAbertos);
+                                session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", funcionario);
                                 session.setAttribute("logado", funcionario.getNick());
                                 request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
                                 return true;
+                            }catch(Exception e){
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
+                                    request.setAttribute("page", "login.jsp");
+                                    rd.forward(request, response);
                             }
-                            
                         }
+                            
                     }
                 }
-                return false;
-                
-            }catch(Exception e){
-                return false;
             }
+            return false;
+                
+        }catch(Exception e){
+            return false;
+        }
     }
 
 }
