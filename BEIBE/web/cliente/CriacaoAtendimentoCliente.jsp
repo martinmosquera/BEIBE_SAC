@@ -44,6 +44,7 @@
               <textarea class="form-control" name="descricao" rows="10" cols="30"></textarea>
               <br><br><input type="submit" class="btn btn-primary" value="CRIAR ATENDIMENTO">
             </form>
+            <a href="PortalUser.jsp"><button class="btn-primary">Home</button></a>
         </div>
             
     </body>
