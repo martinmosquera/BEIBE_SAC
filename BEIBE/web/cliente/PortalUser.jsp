@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <base href="./" target="_self">
         <title>Portal Usuario</title>
         <link rel="shortcut icon" href="./assets/img/favicon.png"/>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -25,28 +26,32 @@
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
-
             <div class="row">
                 <jsp:useBean id="user" class="users.Cliente" scope="session" />
                 <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
             </div>
-            <div class="d-flex">
-                <div class="mx-5 flex-2">
-                    <h3>Dados Cadastrados</h3>
-                    <p>Nome : <jsp:getProperty name="user" property="nome"/></p>
-                    <p>Email : <jsp:getProperty name="user" property="email"/></p>
-                    <p>CPF : <jsp:getProperty name="user" property="cpf"/></p>
-                    <p>Rua : <jsp:getProperty name="user" property="rua"/></p>
-                    <p>Num : <jsp:getProperty name="user" property="num"/></p>
-                    <p>Complemento : <jsp:getProperty name="user" property="complemento"/></p>
-                    <p>Bairro : <jsp:getProperty name="user" property="bairro"/></p>
-                    <p>CEP : <jsp:getProperty name="user" property="cep"/></p>
-                    <p>Cidade : <jsp:getProperty name="user" property="cidade"/></p>
-                    <p>Estado : <jsp:getProperty name="user" property="estado"/></p>
-                    <p>Telefone : <jsp:getProperty name="user" property="telefone"/></p>
+            <span><% request.getAttribute("msg"); %></span>
+            <div class="row justify-content-around">
+                <div class="d-flex">
+                    <div class="flex-2">
+                        <h3>Dados Cadastrados</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item">Nome : <jsp:getProperty name="user" property="nome"/></li>
+                            <li class="list-group-item">Email : <jsp:getProperty name="user" property="email"/></li>
+                            <li class="list-group-item">CPF : <jsp:getProperty name="user" property="cpf"/></li>
+                            <li class="list-group-item">Rua : <jsp:getProperty name="user" property="rua"/></li>
+                            <li class="list-group-item">Num : <jsp:getProperty name="user" property="num"/></li>
+                            <li class="list-group-item">Complemento : <jsp:getProperty name="user" property="complemento"/></li>
+                            <li class="list-group-item">Bairro : <jsp:getProperty name="user" property="bairro"/></li>
+                            <li class="list-group-item">CEP : <jsp:getProperty name="user" property="cep"/></li>
+                            <li class="list-group-item">Cidade : <jsp:getProperty name="user" property="cidade"/></li>
+                            <li class="list-group-item">Estado : <jsp:getProperty name="user" property="estado"/></li>
+                            <li class="list-group-item">Telefone : <jsp:getProperty name="user" property="telefone"/></li>
 
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </div>                 
         </div>
     </body>
 </html>

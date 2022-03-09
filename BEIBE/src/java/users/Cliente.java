@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author dell
  */
-public class Cliente extends Pessoa{
+public class Cliente extends Pessoa implements Serializable{
     private List<Atendimento> lista = new ArrayList<Atendimento>();
 
     public Cliente(){
@@ -32,18 +32,18 @@ public class Cliente extends Pessoa{
        setId(user.getId());
        setNick(user.getNick());
        setNome(user.getNome());
-       this.setCpf(user.getCpf());
-       this.setEmail(user.getEmail());
-       this.setRua(user.getRua());
-       this.setNum(user.getNum());
-       this.setComplemento(user.getComplemento());
-       this.setBairro(user.getBairro());
-       this.setCep(user.getCep());
-       this.setCidade(user.getCidade());
-       this.setEstado(user.getEstado());
-       this.setTelefone(user.getTelefone());
-       this.setSenha(user.getSenha());
-       this.setType(user.getSenha());
+       setCpf(user.getCpf());
+       setEmail(user.getEmail());
+       setRua(user.getRua());
+       setNum(user.getNum());
+       setComplemento(user.getComplemento());
+       setBairro(user.getBairro());
+       setCep(user.getCep());
+       setCidade(user.getCidade());
+       setEstado(user.getEstado());
+       setTelefone(user.getTelefone());
+       setSenha(user.getSenha());
+       setType(user.getSenha());
     }
     
 
@@ -52,8 +52,13 @@ public class Cliente extends Pessoa{
     }
 
     public void setLista(List<Atendimento> lista) {
-        this.lista = lista;
+        for(Atendimento at : lista){
+        this.lista.add(at);
+        }
     }
-
+    
+    public void addAtendimento(Atendimento atendimento){
+    this.lista.add(atendimento);
+    }
 
 }

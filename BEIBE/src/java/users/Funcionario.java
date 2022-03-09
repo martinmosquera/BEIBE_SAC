@@ -5,16 +5,45 @@
  */
 package users;
 
+import atendimento.Atendimento;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author dell
  */
 public class Funcionario extends Pessoa implements Serializable{
+    
+    private List<Atendimento> atendimentos = new ArrayList<Atendimento>();
 
     public Funcionario(Pessoa user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       setId(user.getId());
+       setNick(user.getNick());
+       setNome(user.getNome());
+       setCpf(user.getCpf());
+       setEmail(user.getEmail());
+       setRua(user.getRua());
+       setNum(user.getNum());
+       setComplemento(user.getComplemento());
+       setBairro(user.getBairro());
+       setCep(user.getCep());
+       setCidade(user.getCidade());
+       setEstado(user.getEstado());
+       setTelefone(user.getTelefone());
+       setSenha(user.getSenha());
+       setType(user.getSenha());
+    }
+
+    public List<Atendimento> getAtendimentos() {
+        return atendimentos;
+    }
+
+    public void setAtendimentos(List<Atendimento> atendimentos) {
+        for(Atendimento a: atendimentos){
+            this.atendimentos.add(a);
+        }
     }
     
 }

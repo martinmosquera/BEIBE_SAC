@@ -134,7 +134,7 @@ public class Pessoa implements Serializable{
         return bairro;
     }
 
-    public void setBairro(String barrio) {
+    public void setBairro(String bairro) {
         this.bairro = bairro;
     }
 

@@ -5,13 +5,31 @@
  */
 package servlets;
 
+import ConnectionFactory.ConnectionFactory;
+import atendimento.Atendimento;
+import atendimento.AtendimentoDao.AtendimentoDao;
+import users.Cliente;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import produto.Produto;
+import users.PessoaDao.PessoaDao;
+import produto.ProdutoDao.ProdutoDao;
 
 /**
  *
@@ -31,18 +49,50 @@ public class CriaAtendimento extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            HttpSession session = request.getSession(false);
+            if(session == null){
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Precissa estar logado para usar a pagina!");
+                request.setAttribute("page", "login.jsp");
+                rd.forward(request, response);
+            }
+        ConnectionFactory conn = new ConnectionFactory();
+        
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CriaAtendimento</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CriaAtendimento at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        request.setCharacterEncoding("utf-8");
+        String type = request.getParameter("type");
+        String prod = request.getParameter("produto");
+        List<Produto> lp = (List<Produto>)session.getAttribute("produtos");
+        Produto produto = null;
+        for(Produto p : lp){
+        if(prod.equalsIgnoreCase(p.getNome())) produto = p;
+        }
+        String descricao = request.getParameter("descricao");
+        Cliente cliente = (Cliente)session.getAttribute("user");
+        Atendimento atd = new Atendimento(cliente,type,produto,descricao);
+        Date data = Date.valueOf(LocalDate.now());
+        atd.setData(data);
+        Time tm = Time.valueOf(LocalTime.now());
+        atd.setHora(tm);
+        Timestamp tmst = Timestamp.valueOf(LocalDateTime.now());
+        atd.setDatatime(tmst);
+        atd.setCliente(cliente);
+        atd.setStatus("Aberto");
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            AtendimentoDao aDao = new AtendimentoDao(conn);
+            aDao.inserir(atd);
+            cliente.addAtendimento(atd);
+            session.setAttribute("atendimentos",cliente.getLista());
+            response.sendRedirect("cliente/PortalUser.jsp");
+        }catch(Exception e){
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            request.setAttribute("msg", e.getMessage());
+            request.setAttribute("page", "cliente/PortalUser.jsp");
+            rd.forward(request, response);
+        
         }
     }
 

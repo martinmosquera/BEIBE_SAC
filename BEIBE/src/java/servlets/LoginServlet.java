@@ -17,6 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import users.Pessoa;
 import ConnectionFactory.ConnectionFactory;
+import atendimento.Atendimento;
+import atendimento.AtendimentoDao.AtendimentoDao;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import produto.Produto;
+import produto.ProdutoDao.ProdutoDao;
 import users.Cliente;
 import users.Funcionario;
 import users.PessoaDao.PessoaDao;
@@ -38,7 +46,7 @@ public class LoginServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
 
         String login = request.getParameter("user");
@@ -48,8 +56,10 @@ public class LoginServlet extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver");
             ConnectionFactory conn = new ConnectionFactory();
             PessoaDao uDao = new PessoaDao(conn);
-        if(loginValido(login,pass,request,uDao)){
-
+            AtendimentoDao aDao = new AtendimentoDao(conn);
+            ProdutoDao pDao = new ProdutoDao(conn);
+            
+        if(loginValido(login,pass,request,response,uDao,aDao,pDao)){
             String page = (String)request.getAttribute("page"); 
             response.sendRedirect(page);
             
@@ -81,7 +91,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -95,7 +109,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -108,7 +126,7 @@ public class LoginServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean loginValido(String login, String pass,HttpServletRequest request,PessoaDao uDao) {
+    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao) {
         
         
          try{
@@ -121,28 +139,56 @@ public class LoginServlet extends HttpServlet {
                         if(pass.equalsIgnoreCase(user.getSenha())){
                             if(user.getType().equalsIgnoreCase("U")){
                             Cliente cliente  = new Cliente(user);
+                            List<Atendimento> lista;
+                            lista = aDao.getListaCliente(cliente);
+                            cliente.setLista(lista);
+                            List<Produto> lp = pDao.Listar();
                             HttpSession session = request.getSession();
+                            session.setAttribute("produtos", lp);
+                            session.setAttribute("atendimentos",lista);
                             session.setAttribute("user", cliente);
                             session.setAttribute("logado", cliente.getNick());
                             request.setAttribute("page","cliente/PortalUser.jsp");                          
                             return true;
-                            }else if (user.getType().equalsIgnoreCase("F")){
-                            Funcionario funcionario  = new Funcionario(user);
-                            HttpSession session = request.getSession();
-                            session.setAttribute("user", funcionario);
-                            session.setAttribute("logado", funcionario.getNick());
-                            request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
-                            return true;
-                            }
+                        }else if (user.getType().equalsIgnoreCase("F")){
                             
+                            Funcionario funcionario  = new Funcionario(user);
+                            List<Atendimento> listaTotal;
+                            try{
+
+                                List<Produto> lp = pDao.Listar();
+                                listaTotal = aDao.getListaFuncionario(funcionario);
+    //                            if(lista.size() >0)
+                                funcionario.setAtendimentos(listaTotal);
+                                List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
+                                for(Atendimento a : listaTotal){
+                                    if(a.getStatus().equalsIgnoreCase("aberto"))
+                                        listaAbertos.add(a);
+                                }
+                                HttpSession session = request.getSession();
+                                session.setAttribute("produtos", lp);
+                                session.setAttribute("atendimentosAbertos", listaAbertos);
+                                session.setAttribute("atendimentosTotal", listaTotal);
+                                session.setAttribute("user", funcionario);
+                                session.setAttribute("logado", funcionario.getNick());
+                                request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
+                                return true;
+                            }catch(Exception e){
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
+                                    request.setAttribute("page", "login.jsp");
+                                    rd.forward(request, response);
+                            }
                         }
+                            
                     }
                 }
-                return false;
-                
-            }catch(Exception e){
-                return false;
             }
+            return false;
+                
+        }catch(Exception e){
+            return false;
+        }
     }
 
 }

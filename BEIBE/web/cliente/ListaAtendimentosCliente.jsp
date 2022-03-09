@@ -4,6 +4,8 @@
     Author     : Emanu
 --%>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -41,28 +43,23 @@
               <tr>
                 <th>Atendimento</th>
                 <th>Data abertura</th>
+                <th>Tipo</th>
                 <th>Status</th>
-                <th>Ver mais</th>
+                <th>Descricao</th>
               </tr>
-              <tr>
-                <td>Atendimento 1</td>
-                <td>02-01-2022</td>
-                <td>Aberto</td>
-                <td><button type="button" onclick="">Mais detalhes</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 2</td>
-                <td>04-03-2022</td>
-                <td>Fechado</td>
-                <td><button type="button" onclick="">Mais detalhes</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 3</td>
-                <td>06-03-2022</td>
-                <td>Aberto</td>
-                <td><button type="button" onclick="">Mais detalhes</button></td>
-              </tr>
+              <c:forEach items="${atendimentos}" var="atendimento">
+                <tr>
+                  <th> ${atendimento.getId()} </th>
+                  <th> ${atendimento.getDatatime()} </th>
+                  <th> ${atendimento.getType()} </th>
+                  <th> ${atendimento.getStatus()} </th>
+                  <th> ${atendimento.getDescricao()} </th>
+                 </tr>
+               </c:forEach>
+              
             </table>
+        <hr>
         </div>
+        
     </body>
 </html>
