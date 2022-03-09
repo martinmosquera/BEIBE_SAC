@@ -159,7 +159,7 @@ public class LoginServlet extends HttpServlet {
                                 List<Produto> lp = pDao.Listar();
                                 listaTotal = aDao.getListaFuncionario(funcionario);
     //                            if(lista.size() >0)
-                                funcionario.setAtendimentos(lista);
+                                funcionario.setAtendimentos(listaTotal);
                                 List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
                                 for(Atendimento a : listaTotal){
                                     if(a.getStatus().equalsIgnoreCase("aberto"))
