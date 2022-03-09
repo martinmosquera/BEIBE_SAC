@@ -32,7 +32,7 @@ public class PessoaDao {
     
     private final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String select = "select * from pessoa";
-    private final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=?,updated_at=? WHERE user_id=?";
+    private final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
     private final String delete = "delete from pessoa WHERE user_id=?";
 
     public PessoaDao(ConnectionFactory conFactory) {
@@ -135,11 +135,8 @@ public class PessoaDao {
             stmtAtualiza.setString(9, user.getEstado());
             stmtAtualiza.setString(10, user.getTelefone());
             stmtAtualiza.setString(11, user.getSenha());
-            LocalDate now = LocalDate.now();
-            Date nova = Date.valueOf(now);
             
-            stmtAtualiza.setDate(12, nova);
-            stmtAtualiza.setInt(13, user.getId());
+            stmtAtualiza.setInt(12, user.getId());
             
             stmtAtualiza.executeUpdate();
         } finally{

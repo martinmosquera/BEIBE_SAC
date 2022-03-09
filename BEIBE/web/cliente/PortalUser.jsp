@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <base href="./" target="_self">
         <title>Portal Usuario</title>
         <link rel="shortcut icon" href="./assets/img/favicon.png"/>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -22,12 +23,13 @@
             <jsp:useBean id="user" class="users.Cliente" scope="session" />
             <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
         </div>
+        <span><% request.getAttribute("msg"); %></span>
         <div class="row justify-content-around">
             <div class="col-2">
                 <h3>Menu</h3>
                 <a href="AlteracaoDadosCliente.jsp"><button class="btn-primary">Alterar Dados</button></a><br/>
-                <a href="ListaAtendimentosCliente.jsp"><button class="btn-primary">Listar Atendimentos</button></a><br/>
                 <a href="CriacaoAtendimentoCliente.jsp"><button class="btn-primary">Criar Atendimento</button></a><br/>
+                <a href="ListaAtendimentosCliente.jsp"><button class="btn-primary">Listar Atendimentos</button></a><br/>
                 <a href="../LogoutServlet"><button class="btn-danger">Logout</button></a><br/>
             </div>
             <div class="col-6">

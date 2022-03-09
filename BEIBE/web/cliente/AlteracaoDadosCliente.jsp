@@ -10,9 +10,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Alterar dados</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-        <div>
+        <div class="container">
             <h1>Alterar dados!</h1>
             <jsp:useBean id="user" class="users.Cliente" scope="session" />
             <form method="post" class="form-group" action="../UpdateCliente">
@@ -70,7 +71,8 @@
                  <input type="text" id="telefone" name="telefone" value="<jsp:getProperty name="user" property="telefone" />"><br><br>
                 <input type="submit" value="ATUALIZAR CADASTRO">
             </form> 
-        </div>
                 <a href="PortalUser.jsp"><button class="btn-primary">Home</button></a>
+        </div>
+                
     </body>
 </html>

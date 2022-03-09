@@ -62,13 +62,13 @@ public class UpdateCliente extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver");
             ConnectionFactory conn = new ConnectionFactory();
             PessoaDao uDao = new PessoaDao(conn);
-            uDao.inserir(user);
-            response.sendRedirect("./PortalUser.jsp");
+            uDao.atualizar(user);
+            response.sendRedirect("cliente/PortalUser.jsp");
             
            }catch(Exception e){
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
             request.setAttribute("msg","Erro ao processar a solicitude "+e.getMessage());
-            request.setAttribute("page","PortalUser.jsp");
+            request.setAttribute("page","cliente/PortalUser.jsp");
             rd.forward(request, response);
            }
             

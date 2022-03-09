@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+        request.setCharacterEncoding("utf-8");
             /* TODO output your page here. You may use following sample code. */
             
             Cliente user = new Cliente(request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha"),"U");

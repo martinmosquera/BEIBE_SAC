@@ -1,32 +1,20 @@
 <%-- 
-    Document   : ListaAtendimentosCliente
-    Created on : 06/03/2022, 13:52:35
-    Author     : Emanu
+    Document   : PortalFuncionario
+    Created on : 8 de mar de 2022, 00:02:08
+    Author     : dell
 --%>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Atendimentos</title>
+        <title>Portal Funcionario</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            table{
-              border-collapse: collapse;
-              width: 100%;
-            }
-            td,th{
-              border: 1px solid #dddddd;
-              text-align: left;
-              padding: 8px;
-            }
-        </style>    
     </head>
-    <body class="container">
-        <div>
+    <body>
+        <div class="container">
+            <div><a href="../LogoutServlet"><button class="btn-danger">Logout</button></a><br/></div>
         <h1>Seus Atendimentos:</h1>
             <table>
               <tr>
@@ -48,8 +36,7 @@
               
             </table>
         <hr>
-        <a href="PortalUser.jsp"><button class="btn-primary">Home</button></a>
+        <a href="PortalFuncionario.jsp"><button class="btn-primary">Home</button></a>
         </div>
-        
     </body>
 </html>
