@@ -114,27 +114,27 @@ public class AtendimentoDao {
         Connection connection=connectionFactory.getConnection();
         ResultSet rs = null;
         Produto pr = null;
-        PreparedStatement stmtLista = connection.prepareStatement(selectforfuncionario);
-        int id = funcionario.getId();
-        stmtLista.setInt(1, id);
+        PreparedStatement stmtLista = connection.prepareStatement(select);
         try {
             rs = stmtLista.executeQuery();
             List<Atendimento> atendimentos = new ArrayList<Atendimento>();
+            List<Atendimento> atendimentoTotal = new ArrayList<Atendimento>();
             while (rs.next()) {
                 int funcionario_id = rs.getInt("funcionario_id");
-                if( funcionario_id == funcionario.getId()){
+                
                     int idA = rs.getInt("atendimento_id");
                     Timestamp tmst = rs.getTimestamp("data");
                     String status = rs.getString("status");
                     String type = rs.getString("type");
                     String descricao = rs.getString("descricao");
-    //              
+                    atendimentoTotal.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));
+                if( funcionario_id == funcionario.getId()){    
                     atendimentos.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));           
                 }
                 
             }
-            
-            return atendimentos;
+            funcionario.setAtendimentos(atendimentos);
+            return atendimentoTotal;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally{

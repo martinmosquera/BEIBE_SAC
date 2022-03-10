@@ -3,7 +3,7 @@
     Created on : 06/03/2022, 15:07:23
     Author     : Emanu
 --%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,7 +22,7 @@
               padding: 8px;
             }
               tr:nth-child(even){
-              background-color: tomato;
+              background-color: #DCECE2;
             }
         </style> 
     </head>
@@ -38,41 +38,27 @@
         </nav>
         <div class="container">
             <h1>Todos os atendimentos</h1>
-            <div>
-                <p style="background-color:Tomato; max-width: 90px; padding: 4px">ATRASADO</p>
-                <p style="background-color:yellow; max-width: 90px; padding: 4px">EM DIA</p>
-            </div>
+           
             <br><table>
               <tr>
-                <th>Atendimento</th>
-                <th>Data abertura</th>
-                <th>Status</th>
-                <th>Ver mais</th>
+                <th>#ID</th>
+                <th>DATA</th>
+                <th>TIPO</th>
+                <th>STATUS</th>
+                <th>DESCRIÇÃO</th>
+                <th> OPÇÃO </th>
               </tr>
-              <tr>
-                <td>Atendimento 1</td>
-                <td>02-01-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr style="background-color: yellow">
-                <td>Atendimento 2</td>
-                <td>04-03-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 3</td>
-                <td>06-03-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 4</td>
-                <td>06-03-2022</td>
-                <td>Fechado</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Detalhes</button></td>
-              </tr>
+               <c:forEach items="${atendimentosTotal}" var="atendimento">
+                <tr>
+                  <th> Atendimento ${atendimento.getId()} </th>
+                  <th> ${atendimento.getDatatime()} </th>
+                  <th> ${atendimento.getType()} </th>
+                  <th> ${atendimento.getStatus()} </th>
+                  <th> ${atendimento.getDescricao()} </th>
+                  <td><a href="ResolucaoAtendimento.jsp"><button class="btn btn-secondary" type="button">Resolver</button></a></td>
+                 </tr>
+               </c:forEach>
+              
             </table>
         </div>
     </body>

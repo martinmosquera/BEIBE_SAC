@@ -44,46 +44,22 @@
                 <th>Categoria</th>
                 <th>Descrição</th>
                 <th>Peso</th>
+                <th>Descrição</th>
                 <th>Alterar</th>
-                <th>Vizualizar</th>
                 <th>Remover</th>
               </tr>
-              <tr>
-                <td>Produto1</td>
-                <td>Sabonetes</td>
-                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia pharetra tempor. Donec consequat tempor dolor, nec vehicula purus pellentesque sit amet. Vestibulum eget purus gravida, consectetur sapien non, mattis eros. In tortor massa, hendrerit a odio vestibulum, tincidunt finibus nulla. Proin luctus lectus quis diam ornare bibendum.</td>
-                <td>120g</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Produto2</td>
-                <td>Maquiagem</td>
-                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia pharetra tempor. Donec consequat tempor dolor, nec vehicula purus pellentesque sit amet. Vestibulum eget purus gravida, consectetur sapien non, mattis eros. In tortor massa, hendrerit a odio vestibulum, tincidunt finibus nulla. Proin luctus lectus quis diam ornare bibendum.</td>
-                <td>75g</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Produto3</td>
-                <td>Sabonetes</td>
-                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia pharetra tempor. Donec consequat tempor dolor, nec vehicula purus pellentesque sit amet. Vestibulum eget purus gravida, consectetur sapien non, mattis eros. In tortor massa, hendrerit a odio vestibulum, tincidunt finibus nulla. Proin luctus lectus quis diam ornare bibendum.</td>
-                <td>92g</td>
-                <td><button class="btn btn-secondary" class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Produto4</td>
-                <td>Olhos</td>
-                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia pharetra tempor. Donec consequat tempor dolor, nec vehicula purus pellentesque sit amet. Vestibulum eget purus gravida, consectetur sapien non, mattis eros. In tortor massa, hendrerit a odio vestibulum, tincidunt finibus nulla. Proin luctus lectus quis diam ornare bibendum.</td>
-                <td>450g</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
+              <c:forEach items="${produtos}" var="produto">
+                <tr>
+                  <th> ${produto.getNome()} </th>
+                  <th> ${produto.getCategoria()} </th>
+                  <th> ${produto.getDescricao()} </th>
+                  <th> ${produto.getPeso()} gr </th>
+                  <th> ${atendimento.getDescricao()} </th>
+                  <td><a href="../UpdateProduto"><button class="btn btn-secondary" type="button" key="${produto.getId()}" >Alterar</button></a></td>
+                  <td><a href="../DeleteProduto"><button class="btn btn-secondary" type="button" key="${produto.getId()}">Remover</button></a></td>
+                </tr>
+               </c:forEach>
+              
             </table>
         </div>
     </body>

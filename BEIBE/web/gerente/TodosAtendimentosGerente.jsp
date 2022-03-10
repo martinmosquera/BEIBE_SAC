@@ -22,7 +22,7 @@
               padding: 8px;
             }
               tr:nth-child(even){
-              background-color: tomato;
+              background-color: #FFCCCC;
             }
         </style> 
     </head>
@@ -39,8 +39,8 @@
         <div class="container">
             <h1>Todos os atendimentos</h1>
             <div>
-                <p style="background-color:Tomato; max-width: 90px; padding: 4px">ATRASADO</p>
-                <p style="background-color:yellow; max-width: 90px; padding: 4px">EM DIA</p>
+                <p style="background-color:#FFCCCC; max-width: 90px; padding: 4px">ATRASADO</p>
+                <p style="background-color:#FFFF99; max-width: 90px; padding: 4px">EM DIA</p>
             </div>
             <br><table>
               <tr>

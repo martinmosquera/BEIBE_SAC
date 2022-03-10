@@ -27,6 +27,7 @@ import produto.Produto;
 import produto.ProdutoDao.ProdutoDao;
 import users.Cliente;
 import users.Funcionario;
+import users.Gerente;
 import users.PessoaDao.PessoaDao;
 
 /**
@@ -158,10 +159,8 @@ public class LoginServlet extends HttpServlet {
 
                                 List<Produto> lp = pDao.Listar();
                                 listaTotal = aDao.getListaFuncionario(funcionario);
-    //                            if(lista.size() >0)
-                                funcionario.setAtendimentos(listaTotal);
                                 List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
-                                for(Atendimento a : listaTotal){
+                                for(Atendimento a : funcionario.getAtendimentos()){
                                     if(a.getStatus().equalsIgnoreCase("aberto"))
                                         listaAbertos.add(a);
                                 }
@@ -172,6 +171,29 @@ public class LoginServlet extends HttpServlet {
                                 session.setAttribute("user", funcionario);
                                 session.setAttribute("logado", funcionario.getNick());
                                 request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
+                                return true;
+                            }catch(Exception e){
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
+                                    request.setAttribute("page", "login.jsp");
+                                    rd.forward(request, response);
+                            }
+                        }else if (user.getType().equalsIgnoreCase("G")){
+                            
+                            Gerente gerente  = new Gerente(user);
+                            Funcionario funcionario = new Funcionario(user);
+                            List<Atendimento> listaTotal;
+                            try{
+
+                                List<Produto> lp = pDao.Listar();
+                                listaTotal = aDao.getListaFuncionario(funcionario);
+                                
+                                HttpSession session = request.getSession();
+                                session.setAttribute("produtos", lp);
+                                session.setAttribute("atendimentosTotal", listaTotal);
+                                session.setAttribute("user", gerente);
+                                session.setAttribute("logado", gerente.getNick());
+                                request.setAttribute("page","gerente/PortalGerente.jsp");                          
                                 return true;
                             }catch(Exception e){
                                  RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
