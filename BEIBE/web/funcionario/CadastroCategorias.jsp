@@ -42,10 +42,11 @@
             <h1>Todas as categorias</h1>
             <table>
               <tr>
-                <th>Categorias</th>
+                <th>Nome Categoria</th>
                 <th>Alterar</th>
                 <th>Remover</th>
               </tr>
+              
               <%
                   ServletContext sc = getServletContext();
                   

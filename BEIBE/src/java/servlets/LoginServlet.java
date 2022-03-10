@@ -174,7 +174,7 @@ public class LoginServlet extends HttpServlet {
                                         listaAbertos.add(a);
                                 }
                                 HttpSession session = request.getSession();
-                                
+                                session.setAttribute("categorias", cats);
                                 session.setAttribute("atendimentosAbertos", listaAbertos);
                                 session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", funcionario);

@@ -34,12 +34,22 @@ public class CreateCategoria extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession(false);
-        if(session == null){
+        try{
+             HttpSession session = request.getSession(false);
+             String logado = (String)session.getAttribute("logado");
+            if(logado == null){
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
+                request.setAttribute("page", "login.jsp");
+                rd.forward(request, response);
+
+            }
+        
+        }catch(Exception e){
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
-            request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
-            request.setAttribute("page", "login.jsp");
-            rd.forward(request, response);
+                request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>"+e.getMessage());
+                request.setAttribute("page", "login.jsp");
+                rd.forward(request, response);
         }
         
         try (PrintWriter out = response.getWriter()) {

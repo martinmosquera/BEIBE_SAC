@@ -7,11 +7,13 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,6 +33,24 @@ public class DeleteProduto extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        try{
+        
+             String logado = (String)session.getAttribute("logado");
+            if(logado == null){
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
+                request.setAttribute("page", "login.jsp");
+                rd.forward(request, response);
+
+            }
+        
+        }catch(Exception e){
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>Response: "+e.getMessage());
+                request.setAttribute("page", "login.jsp");
+                rd.forward(request, response);
+        }
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */

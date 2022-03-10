@@ -45,10 +45,17 @@ public class Erro extends HttpServlet {
             out.println("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">");
             out.println("<link href=\"./assets/css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
             out.println("</head>");
-            out.println("<body class=\"container\">");
+            out.println("<body");
+            out.println("<div><nav class=\"navbar navbar-light bg-light shadow-sm px-5 mb-4\">\n" +
+"            <img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png\" height=\"30\" class=\"d-inline-block align-top\" alt=\"\">\n" +
+"            <a href=\"./\" class=\"navbar-nav\">Home</a>\n" +
+"            <a href=\"sobre.jsp\">Sobre</a>\n" +
+"            <a href=\"login.jsp\">Login</a>\n" +
+"        </nav>");
+            out.println("</div><div class=\"container\">");
             out.println("<h1>" + request.getAttribute("msg") + "</h1>");
             String page = (String)request.getAttribute("page");
-            out.println("<a href=\""+page+"\"><button class=\"btn-primary\">Voltar</button></a>");
+            out.println("<a href=\""+page+"\"><button class=\"btn-primary\">Voltar</button></a></div>");
             out.println("</body>");
             out.println("</html>");
         }

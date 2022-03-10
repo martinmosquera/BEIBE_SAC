@@ -7,6 +7,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,29 +35,28 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(false);
-        if(session != null){
-            session.invalidate();
+        
+        try{
+            String logado = (String)session.getAttribute("logado");
+            if(logado != null){
+                session.invalidate();
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Logout Efetuado com Sucesso!");
+                request.setAttribute("page","login.jsp");
+                rd.forward(request, response);
+            }else{
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Você não inicio nenhuma sessão ainda");
+                request.setAttribute("page","login.jsp");
+                rd.forward(request, response);
+            }
+        }catch(Exception e){
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                request.setAttribute("msg", "Erro ao tentar delogar a sessão<br/>Resposta: "+e.getMessage());
+                request.setAttribute("page","login.jsp");
+                rd.forward(request, response);
         }
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<meta charset='utf-8'>");
-            out.println("<meta http-equiv='X-UA-Compatible' content='IE=edge'>");
-            out.println("<title>Logout</title>");            
-            out.println("<link rel=\"shortcut icon\" href=\"./asset/img/favicon.png\"/>");
-            out.println("<meta name='viewport' content='width=device-width, initial-scale=1'>");
-            out.println("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">");
-            out.println("<link href=\"./asset/css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
-            out.println("</head>");
-            out.println("<body class=\"container\">");
-            out.println("<h1> Deslogado com sucesso</h1>");
-            out.println("<a href=\"./\"><button class=\"btn-primary\">Home</button></a>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
