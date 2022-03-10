@@ -5,6 +5,8 @@
  */
 package servlets;
 
+import Categoria.Categoria;
+import Categoria.CategoriaDao.CategoriaDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import produto.Produto;
 import produto.ProdutoDao.ProdutoDao;
 import users.Cliente;
@@ -59,8 +62,9 @@ public class LoginServlet extends HttpServlet {
             PessoaDao uDao = new PessoaDao(conn);
             AtendimentoDao aDao = new AtendimentoDao(conn);
             ProdutoDao pDao = new ProdutoDao(conn);
+            CategoriaDao cDao = new CategoriaDao(conn);
             
-        if(loginValido(login,pass,request,response,uDao,aDao,pDao)){
+        if(loginValido(login,pass,request,response,uDao,aDao,pDao,cDao)){
             String page = (String)request.getAttribute("page"); 
             response.sendRedirect(page);
             
@@ -127,13 +131,20 @@ public class LoginServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao) {
+    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao,CategoriaDao cDao) {
         
         
          try{
                 List<Pessoa> users = uDao.getLista();
                 if (users.isEmpty()) return false;
-             
+                
+                List<Produto> lp = pDao.Listar();
+                List<Categoria> cats = cDao.Listar();
+                
+                ServletContext sc = getServletContext();
+                sc.setAttribute("produtos", lp);
+                sc.setAttribute("categorias", cats);
+                
                 for(Pessoa user : users){
                     
                     if(user.getNick().equalsIgnoreCase(login)){
@@ -143,9 +154,8 @@ public class LoginServlet extends HttpServlet {
                             List<Atendimento> lista;
                             lista = aDao.getListaCliente(cliente);
                             cliente.setLista(lista);
-                            List<Produto> lp = pDao.Listar();
+                            
                             HttpSession session = request.getSession();
-                            session.setAttribute("produtos", lp);
                             session.setAttribute("atendimentos",lista);
                             session.setAttribute("user", cliente);
                             session.setAttribute("logado", cliente.getNick());
@@ -154,10 +164,9 @@ public class LoginServlet extends HttpServlet {
                         }else if (user.getType().equalsIgnoreCase("F")){
                             
                             Funcionario funcionario  = new Funcionario(user);
-                            List<Atendimento> listaTotal;
+                            List<Atendimento> listaTotal = null;
                             try{
-
-                                List<Produto> lp = pDao.Listar();
+                                
                                 listaTotal = aDao.getListaFuncionario(funcionario);
                                 List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
                                 for(Atendimento a : funcionario.getAtendimentos()){
@@ -165,7 +174,7 @@ public class LoginServlet extends HttpServlet {
                                         listaAbertos.add(a);
                                 }
                                 HttpSession session = request.getSession();
-                                session.setAttribute("produtos", lp);
+                                
                                 session.setAttribute("atendimentosAbertos", listaAbertos);
                                 session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", funcionario);
@@ -185,11 +194,10 @@ public class LoginServlet extends HttpServlet {
                             List<Atendimento> listaTotal;
                             try{
 
-                                List<Produto> lp = pDao.Listar();
+                                
                                 listaTotal = aDao.getListaFuncionario(funcionario);
                                 
                                 HttpSession session = request.getSession();
-                                session.setAttribute("produtos", lp);
                                 session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", gerente);
                                 session.setAttribute("logado", gerente.getNick());

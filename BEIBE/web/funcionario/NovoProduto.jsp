@@ -24,7 +24,7 @@
         </nav>
         <div class="container">
             <h1>Novo Produto</h1>
-                <form class="col-8 form-group" method="post" action="../RegisterServlet">
+                <form class="col-8 form-group" method="post" action="../CreateProduto">
                     <div class="form-group mb-2">
                         <label for="nick">Nome:</label>
                         <input class="form-control" type="text" name="nick" placeholder="Nome">

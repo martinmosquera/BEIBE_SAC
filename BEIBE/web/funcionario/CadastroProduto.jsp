@@ -4,6 +4,8 @@
     Author     : Emanu
 --%>
 
+<%@page import="produto.Produto"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -44,22 +46,23 @@
                 <th>Categoria</th>
                 <th>Descrição</th>
                 <th>Peso</th>
-                <th>Descrição</th>
                 <th>Alterar</th>
                 <th>Remover</th>
               </tr>
-              <c:forEach items="${produtos}" var="produto">
-                <tr>
-                  <th> ${produto.getNome()} </th>
-                  <th> ${produto.getCategoria()} </th>
-                  <th> ${produto.getDescricao()} </th>
-                  <th> ${produto.getPeso()} gr </th>
-                  <th> ${atendimento.getDescricao()} </th>
-                  <td><a href="../UpdateProduto"><button class="btn btn-secondary" type="button" key="${produto.getId()}" >Alterar</button></a></td>
-                  <td><a href="../DeleteProduto"><button class="btn btn-secondary" type="button" key="${produto.getId()}">Remover</button></a></td>
-                </tr>
-               </c:forEach>
-              
+              <%
+                  ServletContext sc = getServletContext();
+                  List<Produto> produtos = (List<Produto>)sc.getAttribute("produtos");
+                  for(Produto p : produtos){
+                  out.println("<tr><th>"+p.getNome()+"</th>");
+                  out.println("<th>"+p.getCategoria()+"</th>");
+                  out.println("<th>"+p.getDescricao()+"</th>");
+                  out.println("<th>"+p.getPeso()+" gr </th>");
+                  out.println("<td><a href=\"../UpdateProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\" >Alterar</button></a></td>");
+                  out.println("<td><a href=\"../DeleteProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\">Remover</button></a></td></tr>");
+                  
+                  }
+              %>
+            
             </table>
         </div>
     </body>

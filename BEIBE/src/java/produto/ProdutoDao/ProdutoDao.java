@@ -5,6 +5,8 @@
  */
 package produto.ProdutoDao;
 
+import Categoria.Categoria;
+import Categoria.CategoriaDao.CategoriaDao;
 import ConnectionFactory.ConnectionFactory;
 import atendimento.Atendimento;
 import java.sql.Connection;
@@ -44,11 +46,13 @@ public class ProdutoDao {
                 int id = rs.getInt("id");
                 String nome = rs.getString("nome");
                 int categoria_id = rs.getInt("categoria_id");
+                CategoriaDao cDao = new CategoriaDao(connectionFactory);
+                Categoria categoria = cDao.getCategoria(categoria_id);
                 String descricao = rs.getString("descricao");
                 double peso = rs.getDouble("peso");
                 
                 // adicionando o objeto à lista
-                produtos.add(new Produto(id,nome,descricao,peso));
+                produtos.add(new Produto(id,nome,categoria,descricao,peso));
             }
             
             return produtos;
@@ -70,8 +74,9 @@ public class ProdutoDao {
             rs = stmtLista.executeQuery();
             int produto_id = rs.getInt("id");
             String nome = rs.getString("nome");
-//            int categoria_id = rs.getInt("categoria_id");
-            String categoria = "teste";
+            int categoria_id = rs.getInt("categoria_id");     
+            CategoriaDao cDao = new CategoriaDao(connectionFactory);
+            Categoria categoria = cDao.getCategoria(categoria_id);
             String descricao = rs.getString("descricao");
             double peso = rs.getDouble("peso");
             produto = new Produto(produto_id,nome,categoria,descricao,peso);

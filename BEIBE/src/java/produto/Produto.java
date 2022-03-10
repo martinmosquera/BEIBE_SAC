@@ -5,14 +5,17 @@
  */
 package produto;
 
+import Categoria.Categoria;
+import java.io.Serializable;
+
 /**
  *
  * @author dell
  */
-public class Produto {
+public class Produto implements Serializable{
     private int id;
     private String nome;
-    private String categoria;
+    private Categoria categoria;
     private String descricao;
     private double peso;
     public Produto(){
@@ -21,7 +24,7 @@ public class Produto {
         this.id = id;
         this.nome = nome;
     }
-    public Produto(int id,String nome,String categoria,String descricao,double peso){
+    public Produto(int id,String nome,Categoria categoria,String descricao,double peso){
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
@@ -51,11 +54,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 

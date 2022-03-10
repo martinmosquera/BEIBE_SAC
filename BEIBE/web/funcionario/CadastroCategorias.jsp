@@ -4,6 +4,8 @@
     Author     : Emanu
 --%>
 
+<%@page import="Categoria.Categoria"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -42,33 +44,20 @@
               <tr>
                 <th>Categorias</th>
                 <th>Alterar</th>
-                <th>Vizualizar</th>
                 <th>Remover</th>
               </tr>
-              <tr>
-                <td>Sabonetes</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Maquiagem</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Perfumaria</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>Olhos</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
+              <%
+                  ServletContext sc = getServletContext();
+                  
+                  List<Categoria> categorias = (List<Categoria>)sc.getAttribute("categorias");
+                  for(Categoria c : categorias){
+                  out.println("<tr><th>"+c.getNome()+"</th>");
+                  out.println("<td><a href=\"../UpdateProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\" >Alterar</button></a></td>");
+                  out.println("<td><a href=\"../DeleteProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\">Remover</button></a></td></tr>");
+                  }
+              %>
+              
+              
             </table>
         </div>
     </body>

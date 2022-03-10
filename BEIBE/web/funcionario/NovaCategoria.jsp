@@ -24,13 +24,13 @@
         </nav>
         <div class="container">
             <h1>Nova Categoria</h1>
-                <form class="col-8 form-group" method="post" action="../RegisterServlet">
+                <form class="col-8 form-group" method="post" action="../CreateCategoria">
                     <div class="form-group mb-2">
                         <label for="nick">Nome:</label>
                         <input class="form-control" type="text" name="nick" placeholder="Nome categoria">
                     </div>
                     <div class="form-group mb-2">
-                        <a href="CadastroCategorias.jsp" class="btn btn-primary" >Adicionar</a>
+                        <input type="submit" value="Adicionar" class="btn btn-primary" >
                     </div>
                 </form>
         </div>
