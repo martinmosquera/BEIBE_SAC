@@ -25,6 +25,7 @@
         </nav>
         <div class="container">
             <div class="row">
+                <jsp:useBean id="user" class="api.Model.users.Funcionario" scope="session" />
                 <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
                 <div class="col-8">
                     <h1>Seus Atendimentos Em Aberto:</h1>

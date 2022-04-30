@@ -27,7 +27,7 @@
         </nav>
         <div class="container">
             <div class="row">
-                <jsp:useBean id="user" class="users.Cliente" scope="session" />
+                <jsp:useBean id="user" class="api.Model.users.Cliente" scope="session" />
                 <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
             </div>
             <span><% request.getAttribute("msg"); %></span>

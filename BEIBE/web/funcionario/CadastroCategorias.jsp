@@ -3,8 +3,7 @@
     Created on : 06/03/2022, 15:46:06
     Author     : Emanu
 --%>
-
-<%@page import="Categoria.Categoria"%>
+<%@page import="api.Model.Categoria.Categoria"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

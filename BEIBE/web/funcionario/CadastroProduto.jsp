@@ -4,7 +4,7 @@
     Author     : Emanu
 --%>
 
-<%@page import="produto.Produto"%>
+<%@page import="api.Model.produto.Produto"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -54,7 +54,7 @@
                   List<Produto> produtos = (List<Produto>)sc.getAttribute("produtos");
                   for(Produto p : produtos){
                   out.println("<tr><th>"+p.getNome()+"</th>");
-                  out.println("<th>"+p.getCategoria()+"</th>");
+                  out.println("<th>"+p.getCategoria().getNome()+"</th>");
                   out.println("<th>"+p.getDescricao()+"</th>");
                   out.println("<th>"+p.getPeso()+" gr </th>");
                   out.println("<td><a href=\"../UpdateProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\" >Alterar</button></a></td>");
