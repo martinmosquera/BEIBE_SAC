@@ -53,7 +53,7 @@ public class RegisterServlet extends HttpServlet {
             response.sendRedirect("cliente/PortalUser.jsp");
             
            }catch(Exception e){
-             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg", "Usuario ou senha incorretos");
             request.setAttribute("page", "login.jsp");
             rd.forward(request, response);   

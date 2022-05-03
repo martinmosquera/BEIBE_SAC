@@ -40,7 +40,7 @@ public class UpdateProduto extends HttpServlet {
 
              String logado = (String)session.getAttribute("logado");
             if(logado == null){
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);
@@ -48,7 +48,7 @@ public class UpdateProduto extends HttpServlet {
             }
         
         }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>"+e.getMessage());
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);

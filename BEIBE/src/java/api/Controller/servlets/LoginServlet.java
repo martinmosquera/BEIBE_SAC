@@ -70,14 +70,14 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(page);
             
         }else{
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg", "Usuario ou senha incorretos");
             request.setAttribute("page", "login.jsp");
             rd.forward(request, response);
         }
         } catch (Exception ex) {
             message = ex.getMessage();
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg","Erro ao tentar processar a solicitude "+message);
             request.setAttribute("page", "login.jsp");
             rd.forward(request, response);
@@ -186,7 +186,7 @@ public class LoginServlet extends HttpServlet {
                                 request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
                                 return true;
                             }catch(Exception e){
-                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                                     request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
                                     request.setAttribute("page", "login.jsp");
                                     rd.forward(request, response);
@@ -208,7 +208,7 @@ public class LoginServlet extends HttpServlet {
                                 request.setAttribute("page","gerente/PortalGerente.jsp");                          
                                 return true;
                             }catch(Exception e){
-                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                                     request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
                                     request.setAttribute("page", "login.jsp");
                                     rd.forward(request, response);

@@ -40,18 +40,18 @@ public class LogoutServlet extends HttpServlet {
             String logado = (String)session.getAttribute("logado");
             if(logado != null){
                 session.invalidate();
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Logout Efetuado com Sucesso!");
                 request.setAttribute("page","login.jsp");
                 rd.forward(request, response);
             }else{
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Você não inicio nenhuma sessão ainda");
                 request.setAttribute("page","login.jsp");
                 rd.forward(request, response);
             }
         }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar delogar a sessão<br/>Resposta: "+e.getMessage());
                 request.setAttribute("page","login.jsp");
                 rd.forward(request, response);

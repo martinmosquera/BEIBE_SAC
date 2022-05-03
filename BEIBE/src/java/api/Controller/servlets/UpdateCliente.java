@@ -42,7 +42,7 @@ public class UpdateCliente extends HttpServlet {
 
              String logado = (String)session.getAttribute("logado");
             if(logado == null){
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);
@@ -50,7 +50,7 @@ public class UpdateCliente extends HttpServlet {
             }
         
         }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>"+e.getMessage());
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);
@@ -78,7 +78,7 @@ public class UpdateCliente extends HttpServlet {
             response.sendRedirect("cliente/PortalUser.jsp");
             
            }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg","Erro ao processar a solicitude "+e.getMessage());
             request.setAttribute("page","cliente/PortalUser.jsp");
             rd.forward(request, response);

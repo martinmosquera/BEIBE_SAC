@@ -49,7 +49,7 @@ public class CriaAtendimento extends HttpServlet {
         
              String logado = (String)session.getAttribute("logado");
             if(logado == null){
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Precissa Estar Logado para usar este serviço");
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);
@@ -87,7 +87,7 @@ public class CriaAtendimento extends HttpServlet {
             session.setAttribute("atendimentos",cliente.getLista());
             response.sendRedirect("cliente/PortalUser.jsp");
         }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg", e.getMessage());
             request.setAttribute("page", "cliente/PortalUser.jsp");
             rd.forward(request, response);
@@ -96,7 +96,7 @@ public class CriaAtendimento extends HttpServlet {
             }
         
         }catch(Exception e){
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Erro");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>Response: "+e.getMessage());
                 request.setAttribute("page", "login.jsp");
                 rd.forward(request, response);
