@@ -7,6 +7,7 @@
 <%@page import="api.Model.produto.Produto"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -49,19 +50,15 @@
                 <th>Alterar</th>
                 <th>Remover</th>
               </tr>
-              <%
-                  ServletContext sc = getServletContext();
-                  List<Produto> produtos = (List<Produto>)sc.getAttribute("produtos");
-                  for(Produto p : produtos){
-                  out.println("<tr><th>"+p.getNome()+"</th>");
-                  out.println("<th>"+p.getCategoria().getNome()+"</th>");
-                  out.println("<th>"+p.getDescricao()+"</th>");
-                  out.println("<th>"+p.getPeso()+" gr </th>");
-                  out.println("<td><a href=\"../UpdateProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\" >Alterar</button></a></td>");
-                  out.println("<td><a href=\"../DeleteProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.getId()}\">Remover</button></a></td></tr>");
-                  
-                  }
-              %>
+              
+             <c:forEach var="p" items="${produtos}">
+                  <tr><th>${p.nome}</th>"
+                  <th>${p.categoria.nome}</th>
+                  <th>${p.descricao}</th>
+                  <th>${p.peso}</th>
+                  <td><a href=\"../UpdateProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.id}\" >Alterar</button></a></td>
+                  <td><a href=\"../DeleteProduto\"><button class=\"btn btn-secondary\" type=\"button\" key=\"${produto.id}\">Remover</button></a></td></tr>
+              </c:forEach>
             
             </table>
         </div>
