@@ -11,6 +11,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Novo Funcionário</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
@@ -31,15 +34,16 @@
                     </div>
                     <div class="form-group mb-2">
                         <label for="peso">Cargo</label>
-                        <input class="form-control" type="text" name="peso" placeholder="Cargo">
+                        <input class="form-control" type="text" name="cargo" placeholder="Cargo">
                     </div>
                     <div class="form-group mb-2">
                         <label for="peso">CPF</label>
-                        <input class="form-control" type="text" name="peso" placeholder="CPF">
+                        <input class="form-control" type="text" id="cpf" name="cpf" placeholder="CPF" maxlength="100">
+                        <script type="text/javascript">$("#cpf").mask("000.000.000-00");</script>
                     </div>
                    <div class="form-group mb-2">
                         <label for="peso">Email</label>
-                        <input class="form-control" type="text" name="peso" placeholder="Email">
+                        <input class="form-control" type="email" name="email" placeholder="Email">
                     </div>
                     <div class="form-group mb-2">
                         <a href="CadastroFuncionarios.jsp" class="btn btn-primary" >Adicionar</a>

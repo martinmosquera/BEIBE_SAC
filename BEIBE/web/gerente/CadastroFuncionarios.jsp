@@ -4,13 +4,14 @@
     Author     : Emanu
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <title>Cadastrar Funcionarios</title>
+        <title>Gerenciar funcionários</title>
         <style>
             table{
               border-collapse: collapse;
@@ -46,34 +47,16 @@
                 <th>Vizualizar</th>
                 <th>Remover</th>
               </tr>
-              <tr>
-                <td>João Silva</td>
-                <td>Funcionário</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>João Silva</td>
-                <td>Gerente</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>João Silva</td>
-                <td>Funcionário</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
-              <tr>
-                <td>João Silva</td>
-                <td>Gerente</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Alterar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Vizualizar</button></td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Remover</button></td>
-              </tr>
+              
+              <c:forEach var="f" items="${funcionarios}">
+                <tr>
+                  <td>${f.nome}</td>
+                  <td>${f.cargo}</td>
+                  <td><a class="btn btn-secondary" type="button" href="">Alterar</a></td>
+                  <td><a class="btn btn-secondary" type="button" href="">Vizualizar</a></td>
+                  <td><a class="btn btn-secondary" type="button" href="">Remover</a></td>
+                </tr>
+              </c:forEach>
             </table>
         </div>
     </body>

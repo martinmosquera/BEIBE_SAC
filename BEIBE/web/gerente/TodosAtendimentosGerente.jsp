@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>  
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,32 +49,17 @@
                 <th>Atendimento</th>
                 <th>Data abertura</th>
                 <th>Status</th>
-                <th>Ver mais</th>
+                <th>Ação</th>
               </tr>
-              <tr>
-                <td>Atendimento 1</td>
-                <td>02-01-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr style="background-color: yellow">
-                <td>Atendimento 2</td>
-                <td>04-03-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 3</td>
-                <td>06-03-2022</td>
-                <td>Aberto</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Resolver</button></td>
-              </tr>
-              <tr>
-                <td>Atendimento 4</td>
-                <td>06-03-2022</td>
-                <td>Fechado</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Detalhes</button></td>
-              </tr>
+              
+              <c:forEach var="a" items="${atendimentos}">
+                <tr>
+                  <td>${a.descricao}</td>
+                  <td><fmt:formatDate value="${a.data}" var="formattedData" pattern="dd/MM/yyyy"/></td>
+                  <td>${a.status}</td>
+                  <td><a class="btn btn-secondary" type="button" href="">Resolver</a></td>
+                </tr>
+              </c:forEach>
             </table>
         </div>
     </body>

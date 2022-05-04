@@ -87,7 +87,7 @@ public class ClienteServlet extends HttpServlet {
             } catch (AppException ex) {
                         request.setAttribute("msg", "Erro ao tentar Carregar a pagina |\n " + ex.getMessage());
                         request.setAttribute("form", "alterar");
-                        error = getServletContext().getRequestDispatcher("./error.jsp");
+                        error = getServletContext().getRequestDispatcher("/error.jsp");
                         error.forward(request, response);
             }
         }else{        

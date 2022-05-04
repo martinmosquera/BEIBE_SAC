@@ -27,15 +27,15 @@
                 <form class="col-8 form-group" method="post" action="../CreateProduto">
                     <div class="form-group mb-2">
                         <label for="nick">Nome:</label>
-                        <input class="form-control" type="text" name="nick" placeholder="Nome">
+                        <input class="form-control" type="text" name="nick" placeholder="Nome" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
                         <label for="category">Categoria:</label>
-                        <input class="form-control" type="text" name="category" placeholder="Nome categoria">
+                        <input class="form-control" type="text" name="category" placeholder="Nome categoria" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
                         <label for="peso">Peso:</label>
-                        <input class="form-control" type="text" name="peso" placeholder="Peso (g)">
+                        <input class="form-control" type="text" name="peso" placeholder="Peso (g)" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
                         <a href="CadastroProduto.jsp" class="btn btn-primary" >Adicionar</a>

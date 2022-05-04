@@ -41,7 +41,7 @@
                 <br><a href="NovoProduto.jsp" class="btn btn-primary my-2">Adicionar novo produto</a>
             </form>
             <h1>Todos os produtos</h1>
-                        <table>
+            <table>
               <tr>
                 <th>Nome</th>
                 <th>Categoria</th>

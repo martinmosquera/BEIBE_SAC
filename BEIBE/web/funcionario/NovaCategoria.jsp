@@ -27,7 +27,7 @@
                 <form class="col-8 form-group" method="post" action="../CreateCategoria">
                     <div class="form-group mb-2">
                         <label for="nick">Nome:</label>
-                        <input class="form-control" type="text" name="nick" placeholder="Nome categoria">
+                        <input class="form-control" type="text" name="nick" placeholder="Nome categoria" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
                         <input type="submit" value="Adicionar" class="btn btn-primary" >

@@ -15,6 +15,8 @@
         <title>Alterar dados</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="${url}/assets/css/style.css" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
@@ -71,7 +73,8 @@
                         <option value="EX">Estrangeiro</option>
                     </select>
                  <label for="cep">CEP:</label> 
-                 <input type="text" class="form-control mb-2" id="cep" name="cep" value="${user.cep}">
+                 <input type="text" class="form-control mb-2" id="cep" name="cep" value="${user.cep}" pattern="[0-9]{5}-[0-9]{3}">
+                 <script type="text/javascript">$("#cep").mask("00000-000");</script>
                  <label for="cidade">Cidade:</label> 
                  <input type="text" class="form-control mb-2" id="cidade" name="cidade" value="${user.cidade}">
                  <label for="bairro">Bairro:</label> 
@@ -81,8 +84,9 @@
                  <label for="complemento">Complemento:</label> 
                  <input type="text" class="form-control mb-2" id="complemento" name="complemento" value="${user.complemento}">
                  <label for="telefone">Telefone:</label> 
-                 <input type="text" class="form-control mb-2" id="telefone" name="telefone" value="${user.telefone}">
-                <input type="submit" class="btn btn-primary" value="ATUALIZAR CADASTRO">
+                 <input type="text" class="form-control mb-2" id="telefone" name="telefone" value="${user.telefone}" pattern="\([0-9]{2}\)[\s][0-9]{4}-[0-9]{4,5}">
+                 <script type="text/javascript">$("#telefone").mask("(00) 0000-00009");</script>
+                 <input type="submit" class="btn btn-primary" value="ATUALIZAR CADASTRO">
             </form> 
         </div>
            <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">
