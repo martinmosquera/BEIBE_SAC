@@ -1,9 +1,11 @@
+<%-- 
+    Document   : index
+    Created on : 4 de mai de 2022, 16:19:17
+    Author     : dell
+--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <meta charset='utf-8'>
@@ -18,8 +20,8 @@ and open the template in the editor.
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="30" class="d-inline-block align-top" alt="">
             <a href="./" class="navbar-nav">Home</a>
-            <a href="sobre.jsp">Sobre</a>
-            <a href="login.jsp">Login</a>
+            <a href="./ClienteServlet?to=sobre">Sobre</a>
+            <a href="./ClienteServlet?to=login">Login</a>
         </nav>
         <div class="container">
             <div class="d-flex">
@@ -32,7 +34,7 @@ and open the template in the editor.
             </div>
         </div>
         <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">
-                <p style="margin-left:50px">Rua do Embuste, 1313 - Curitiba, PR, 13131-313 | (41) 9 1313-1313</p>
+                <p style="margin-left:50px">${config.info}</p>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     

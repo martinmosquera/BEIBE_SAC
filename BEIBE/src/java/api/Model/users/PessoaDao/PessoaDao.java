@@ -10,6 +10,7 @@ import api.Model.Exceptions.AtualizaClienteException;
 import api.Model.Exceptions.ConnectionException;
 import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.ExcluirClienteException;
+import api.Model.Exceptions.InserirClienteException;
 import api.Model.users.Cliente;
 import java.sql.Connection;
 import java.sql.Date;
@@ -17,15 +18,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import api.Model.users.Pessoa;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,7 +33,7 @@ public class PessoaDao {
 
     private static ConnectionFactory connectionFactory = new ConnectionFactory();
     
-    private final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String select = "select * from pessoa";
     private static final String selectById = "select * from pessoa where user_id=?";
     private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
@@ -47,7 +43,7 @@ public class PessoaDao {
         this.connectionFactory = conFactory;
     }
 
-    public void inserir(Pessoa user) {
+    public static void inserir(Cliente user) throws InserirClienteException{
         try {
             Connection connection=connectionFactory.getConnection();
             // prepared statement para inserção
@@ -82,7 +78,7 @@ public class PessoaDao {
             user.setId(i);
             
         } catch (SQLException | ConnectionException e) {
-            throw new RuntimeException(e);
+            throw new InserirClienteException(e);
         } 
     }
 

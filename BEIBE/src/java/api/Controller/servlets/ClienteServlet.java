@@ -5,9 +5,12 @@
  */
 package api.Controller.servlets;
 
+import api.Model.Categoria.Categoria;
+import api.Model.CategoriaFacade;
 import api.Model.ClienteFacade;
 import api.Model.ConnectionFactory.ConnectionFactory;
 import api.Model.Exceptions.AppException;
+import api.Model.ProdutoFacade;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.produto.Produto;
@@ -21,6 +24,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,6 +53,45 @@ public class ClienteServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String host = "http://"+ request.getServerName() + ":"+request.getServerPort();
+        String home = request.getContextPath();
+        String url = host+home;
+        request.getSession().setAttribute("url", url);
+        
+        
+        String action = (String)request.getParameter("to");
+        Cliente uCliente;
+        RequestDispatcher error;
+        
+        if(action.equalsIgnoreCase("home")){
+             getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+        }else if(action.equalsIgnoreCase("formNew")){
+             getServletContext().getRequestDispatcher("/cliente/register.jsp").forward(request, response);
+        }else if(action.equalsIgnoreCase("sobre")){
+            getServletContext().getRequestDispatcher("/sobre.jsp").forward(request, response);
+        }else if(action.equalsIgnoreCase("login")){
+            getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+           }else if(action.equalsIgnoreCase("userNew")){
+            uCliente = new Cliente(request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha"),"U");
+            try {
+                ClienteFacade.insereUsuario(uCliente);
+                HttpSession session = request.getSession();
+                session.setAttribute("user", uCliente);
+                session.setAttribute("logado", uCliente.getNick());
+                session.setAttribute("type",uCliente.getType());
+                List<Produto> lp = ProdutoFacade.getListaProdutos();
+                List<Categoria> cats = CategoriaFacade.listarCategorias();
+                session.setAttribute("produtos", lp);
+                session.setAttribute("categorias", cats);
+                getServletContext().getRequestDispatcher("/cliente/PortalUser.jsp").forward(request, response);
+            } catch (AppException ex) {
+                        request.setAttribute("msg", "Erro ao tentar Carregar a pagina |\n " + ex.getMessage());
+                        request.setAttribute("form", "alterar");
+                        error = getServletContext().getRequestDispatcher("./error.jsp");
+                        error.forward(request, response);
+            }
+        }else{        
+        
         
         HttpSession session = request.getSession(false);
         try{
@@ -67,7 +111,7 @@ public class ClienteServlet extends HttpServlet {
                 rd.forward(request, response);
         }
       
-        String action = (String)request.getParameter("to");
+        
         String idCliente;
         int id;
         Cliente cliente;
@@ -199,8 +243,8 @@ public class ClienteServlet extends HttpServlet {
                     erro.forward(request, response);
                 break;
                
+            }
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

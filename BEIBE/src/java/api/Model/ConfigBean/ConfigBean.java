@@ -5,9 +5,7 @@
  */
 package api.Model.ConfigBean;
 
-import api.Model.Categoria.Categoria;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *

@@ -5,13 +5,10 @@
  */
 package api.Controller.servlets;
 
-import api.Model.Categoria.Categoria;
-import api.Model.Categoria.CategoriaDao.CategoriaDao;
+
 import api.Model.ConfigBean.ConfigBean;
-import api.Model.ConnectionFactory.ConnectionFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,8 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import api.Model.produto.Produto;
-import api.Model.produto.ProdutoDao.ProdutoDao;
 
 /**
  *
@@ -36,13 +31,17 @@ public class LoadOnStartup extends HttpServlet {
             conf.setInfo("Rua do Embuste, 1313 - Curitiba, PR, 13131-313 | (41) 9 1313-1313");
             ServletContext ctx = config.getServletContext();
             ctx.setAttribute("config", conf);
-            
         
     }
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
+        StringBuffer url = request.getRequestURL();
+        String uri = request.getRequestURI();   
+        String host = url.substring(0, url.indexOf(uri));
+        getServletContext().setAttribute("url", host);
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");

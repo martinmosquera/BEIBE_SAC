@@ -10,6 +10,7 @@ import api.Model.Exceptions.AppException;
 import api.Model.Exceptions.AtualizaClienteException;
 import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.InserirAtendimentoException;
+import api.Model.Exceptions.InserirClienteException;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.users.Cliente;
@@ -58,6 +59,14 @@ public class ClienteFacade {
          }catch(InserirAtendimentoException e){
              throw new AppException(e);
          }
+     }
+     
+     public static void insereUsuario(Cliente cliente) throws AppException{
+     try{
+         PessoaDao.inserir(cliente);
+        }catch(InserirClienteException e){
+            throw new AppException(e);
+        }
      }
     
 }

@@ -34,6 +34,7 @@ import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
 import api.Model.users.Gerente;
 import api.Model.users.PessoaDao.PessoaDao;
+import org.jboss.weld.context.ApplicationContext;
 
 /**
  *
@@ -54,7 +55,7 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-
+      
         String login = request.getParameter("user");
         String pass = request.getParameter("pass");
         String message = "";

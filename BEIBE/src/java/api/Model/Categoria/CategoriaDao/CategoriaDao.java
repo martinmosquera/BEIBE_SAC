@@ -23,16 +23,16 @@ import java.util.List;
  */
 public class CategoriaDao {
     
-    private ConnectionFactory connectionFactory;
+    private static ConnectionFactory connectionFactory = new ConnectionFactory();
    
-    private final String selectAll = "select * from categoria";
+    private static final String selectAll = "select * from categoria";
     private final String selectCategoria = "select * from categoria where id=?";
     
     public CategoriaDao(ConnectionFactory conFactory) {
         this.connectionFactory = conFactory;
     }
     
-    public List<Categoria> Listar() throws ListaCategoriaException{
+    public static List<Categoria> Listar() throws ListaCategoriaException{
         
         try {
             Connection connection=connectionFactory.getConnection();
