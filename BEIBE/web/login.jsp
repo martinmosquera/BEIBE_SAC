@@ -3,7 +3,7 @@
     Created on : 5 de mar de 2022, 17:11:42
     Author     : dell
 --%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -38,7 +38,11 @@
                     <div class="form-group">
                         <input type="submit" class="form-control btn-primary" value="Entrar">
                     </div>
+                    <c:if test="${msg != \"\"}" >
+                        <div class="text-danger form-group"> ${msg}</div>
+                    </c:if>
                 </form>
+                
             </div>
         </div>
         <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">

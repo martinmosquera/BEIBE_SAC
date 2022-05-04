@@ -7,6 +7,9 @@ package api.Model.Categoria.CategoriaDao;
 
 import api.Model.Categoria.Categoria;
 import api.Model.ConnectionFactory.ConnectionFactory;
+import api.Model.Exceptions.ConnectionException;
+import api.Model.Exceptions.ListaCategoriaException;
+import api.Model.Exceptions.getCategoriaException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,11 +32,12 @@ public class CategoriaDao {
         this.connectionFactory = conFactory;
     }
     
-    public List<Categoria> Listar() throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        ResultSet rs = null;
-        PreparedStatement stmtLista = connection.prepareStatement(selectAll);
+    public List<Categoria> Listar() throws ListaCategoriaException{
+        
         try {
+            Connection connection=connectionFactory.getConnection();
+            ResultSet rs = null;
+            PreparedStatement stmtLista = connection.prepareStatement(selectAll);
             rs = stmtLista.executeQuery();
             List<Categoria> categorias = new ArrayList<Categoria>();
             while (rs.next()) {
@@ -44,27 +48,20 @@ public class CategoriaDao {
             }
             
             return categorias;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally{
-            try{
-                rs.close();
-                stmtLista.close();
-            }catch(Exception e){
-                throw new RuntimeException(e);
-            }
-            
-        }
+        } catch (SQLException | ConnectionException e) {
+            throw new ListaCategoriaException(e);
+        } 
 
     }
     
-    public Categoria getCategoria(int id) throws SQLException{
-        Connection connection=connectionFactory.getConnection();
+    public Categoria getCategoria(int id) throws getCategoriaException{
+        
+        try{
+            Connection connection=connectionFactory.getConnection();
         ResultSet rs = null;
         PreparedStatement stmtLista = connection.prepareStatement(selectCategoria);
         Categoria categoria = null;
         stmtLista.setInt(1,id);
-        try{
             rs = stmtLista.executeQuery();
             
             while(rs.next()){
@@ -78,8 +75,8 @@ public class CategoriaDao {
             }
             return categoria;
             
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        }catch(SQLException | ConnectionException e){
+            throw new getCategoriaException(e);
         }
     }
 }

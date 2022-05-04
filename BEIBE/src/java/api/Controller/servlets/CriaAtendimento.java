@@ -95,7 +95,7 @@ public class CriaAtendimento extends HttpServlet {
         }
             }
         
-        }catch(Exception e){
+        }catch(IOException | ServletException e){
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>Response: "+e.getMessage());
                 request.setAttribute("page", "login.jsp");

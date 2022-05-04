@@ -4,6 +4,9 @@
     Author     : Emanu
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:if test="${user == null}" >
+    <c:redirect url="ClienteServlet"></c:redirect>
+</c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,18 +17,17 @@
     </head>
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
-                <a href="PortalUser.jsp">
+                <a href="../ClienteServlet?to=home">
                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="35" class="d-inline-block align-top" alt="">
                 </a>
-                <a href="AlteracaoDadosCliente.jsp"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
-                <a href="ListaAtendimentosCliente.jsp"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
-                <a href="CriacaoAtendimentoCliente.jsp"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
+                <a href="../ClienteServlet?to=update"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
+                <a href="../ClienteServlet?to=listar"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
+                <a href="../ClienteServlet?to=newForm"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
-        <jsp:useBean id="user" class="users.Cliente" scope="session" />
         <div class="container">
-            <h1>Olá <jsp:getProperty name="user" property="nick" />, crie seu atendimento abaixo:</h1>
-            <form action="../CriaAtendimento" method="post">
+            <h1>Olá ${user.nick}, crie seu atendimento abaixo:</h1>
+            <form action="../ClienteServlet?to=newAtendimento" method="post">
               <label for="type">Tipo de atendimento:</label><br><br>
                <select  class="form-select" id="type" name="type">
                    <option>Reclamação</option>
@@ -36,15 +38,14 @@
               <label class="my-2" for="produto">Selecione o produto:</label></br>
               <select class="form-select" id="produto" name="produto">
                     <c:forEach items="${produtos}" var="produto">
-                        <option> ${produto.getNome()} </option>
+                        <option> ${produto.nome} </option>
                     </c:forEach>
                    
                </select>
               <label class="my-2" for="descricao">Descrição atendimento:</label><br/>
-              <textarea class="form-control" name="descricao" rows="10" cols="30"></textarea>
+              <textarea class="form-control" name="descricao" rows="10" cols="30" ></textarea>
               <br><br><input type="submit" class="btn btn-primary" value="CRIAR ATENDIMENTO">
             </form>
-            <a href="PortalUser.jsp"><button class="btn-primary">Home</button></a>
         </div>
             
     </body>

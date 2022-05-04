@@ -7,6 +7,7 @@ package api.Controller.servlets;
 
 import api.Model.Categoria.Categoria;
 import api.Model.Categoria.CategoriaDao.CategoriaDao;
+import api.Model.ClienteFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import api.Model.users.Pessoa;
 import api.Model.ConnectionFactory.ConnectionFactory;
-import api.Model.Facade;
+import api.Model.ProdutoFacade;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import java.sql.SQLException;
@@ -62,10 +63,9 @@ public class LoginServlet extends HttpServlet {
             ConnectionFactory conn = new ConnectionFactory();
             PessoaDao uDao = new PessoaDao(conn);
             AtendimentoDao aDao = new AtendimentoDao(conn);
-            ProdutoDao pDao = new ProdutoDao(conn);
             CategoriaDao cDao = new CategoriaDao(conn);
             
-        if(loginValido(login,pass,request,response,uDao,aDao,pDao,cDao)){
+        if(loginValido(login,pass,request,response,uDao,aDao,cDao)){
             String page = (String)request.getAttribute("page"); 
             response.sendRedirect(page);
             
@@ -132,22 +132,21 @@ public class LoginServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,ProdutoDao pDao,CategoriaDao cDao) {
+    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,CategoriaDao cDao) {
         
             
          try{
 
-            List<Pessoa> users =  Facade.getListaClientes();
+            List<Pessoa> users =  ClienteFacade.getListaClientes();
              
 //                List<Pessoa> users = uDao.getLista();
                 if (users.isEmpty()) return false;
                 
-                List<Produto> lp = pDao.Listar();
-                List<Categoria> cats = cDao.Listar();
-                
-                ServletContext sc = getServletContext();
-                sc.setAttribute("produtos", lp);
-                sc.setAttribute("categorias", cats);
+                List<Produto> lp = ProdutoFacade.getListaProdutos();
+                List<Categoria> cats = cDao.Listar(); 
+                HttpSession session = request.getSession();
+                session.setAttribute("produtos", lp);
+                session.setAttribute("categorias", cats);
                 
                 for(Pessoa user : users){
                     
@@ -158,7 +157,6 @@ public class LoginServlet extends HttpServlet {
                                 List<Atendimento> lista;
                                 lista = aDao.getListaCliente(cliente);
                                 cliente.setLista(lista);
-                                HttpSession session = request.getSession();
                                 session.setAttribute("atendimentos",lista);
                                 session.setAttribute("user", cliente);
                                 session.setAttribute("logado", cliente.getNick());
@@ -177,7 +175,6 @@ public class LoginServlet extends HttpServlet {
                                     if(a.getStatus().equalsIgnoreCase("aberto"))
                                         listaAbertos.add(a);
                                 }
-                                HttpSession session = request.getSession();
                                 session.setAttribute("categorias", cats);
                                 session.setAttribute("atendimentosAbertos", listaAbertos);
                                 session.setAttribute("atendimentosTotal", listaTotal);
@@ -200,8 +197,6 @@ public class LoginServlet extends HttpServlet {
 
                                 
                                 listaTotal = aDao.getListaFuncionario(funcionario);
-                                
-                                HttpSession session = request.getSession();
                                 session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", gerente);
                                 session.setAttribute("logado", gerente.getNick());

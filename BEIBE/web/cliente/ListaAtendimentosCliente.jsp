@@ -5,7 +5,9 @@
 --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<c:if test="${user == null}" >
+    <c:redirect url="ClientesServlet"></c:redirect>
+</c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -29,12 +31,12 @@
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
                 
-                <a href="PortalUser.jsp">
+                <a href="../ClienteServlet?to=home">
                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="35" class="d-inline-block align-top" alt="">
                 </a>
-                <a href="AlteracaoDadosCliente.jsp"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
-                <a href="ListaAtendimentosCliente.jsp"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
-                <a href="CriacaoAtendimentoCliente.jsp"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
+                <a href="../ClienteServlet?to=update"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
+                <a href="../ClienteServlet?to=listar"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
+                <a href="../ClienteServlet?to=newForm"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
@@ -47,6 +49,9 @@
                 <th>Status</th>
                 <th>Descricao</th>
               </tr>
+              <c:if test="${atendimentos[0].id == null}" >
+                  <h3>Usuario Ainda não tem atendimentos</h3>
+              </c:if>
               <c:forEach items="${atendimentos}" var="atendimento">
                 <tr>
                   <th> ${atendimento.getId()} </th>
@@ -56,7 +61,6 @@
                   <th> ${atendimento.getDescricao()} </th>
                  </tr>
                </c:forEach>
-              
             </table>
         <hr>
         </div>

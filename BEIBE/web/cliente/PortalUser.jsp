@@ -3,7 +3,10 @@
     Created on : 8 de mar de 2022, 00:01:44
     Author     : dell
 --%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:if test="${user == null}" >
+    <c:redirect url="ClientesServlet"></c:redirect>
+</c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,33 +23,32 @@
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="35" class="d-inline-block align-top" alt="">
-                <a href="AlteracaoDadosCliente.jsp"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
-                <a href="ListaAtendimentosCliente.jsp"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
-                <a href="CriacaoAtendimentoCliente.jsp"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
+                <a href="../ClienteServlet?to=update"><button class="btn btn-light w-100 m-2 ">Alterar Dados</button></a><br/>
+                <a href="../ClienteServlet?to=listar"><button class="btn btn-light  w-100 m-2 ">Listar Atendimentos</button></a><br/>
+                <a href="../ClienteServlet?to=newForm"><button class="btn btn-light w-100 m-2 ">Criar Atendimento</button></a><br/>
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
             <div class="row">
-                <jsp:useBean id="user" class="api.Model.users.Cliente" scope="session" />
-                <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
+                <h1>Benvind@ ${user.nick}</h1>
             </div>
-            <span><% request.getAttribute("msg"); %></span>
+            <span>${msg}</span>
             <div class="row justify-content-around">
                 <div class="d-flex">
                     <div class="flex-2">
                         <h3>Dados Cadastrados</h3>
                         <ul class="list-group">
-                            <li class="list-group-item">Nome : <jsp:getProperty name="user" property="nome"/></li>
-                            <li class="list-group-item">Email : <jsp:getProperty name="user" property="email"/></li>
-                            <li class="list-group-item">CPF : <jsp:getProperty name="user" property="cpf"/></li>
-                            <li class="list-group-item">Rua : <jsp:getProperty name="user" property="rua"/></li>
-                            <li class="list-group-item">Num : <jsp:getProperty name="user" property="num"/></li>
-                            <li class="list-group-item">Complemento : <jsp:getProperty name="user" property="complemento"/></li>
-                            <li class="list-group-item">Bairro : <jsp:getProperty name="user" property="bairro"/></li>
-                            <li class="list-group-item">CEP : <jsp:getProperty name="user" property="cep"/></li>
-                            <li class="list-group-item">Cidade : <jsp:getProperty name="user" property="cidade"/></li>
-                            <li class="list-group-item">Estado : <jsp:getProperty name="user" property="estado"/></li>
-                            <li class="list-group-item">Telefone : <jsp:getProperty name="user" property="telefone"/></li>
+                            <li class="list-group-item">Nome : ${user.nome}</li>
+                            <li class="list-group-item">Email : ${user.email}</li>
+                            <li class="list-group-item">CPF : ${user.cpf}</li>
+                            <li class="list-group-item">Rua : ${user.rua}</li>
+                            <li class="list-group-item">Num : ${user.num}</li>
+                            <li class="list-group-item">Complemento : ${user.complemento}</li>
+                            <li class="list-group-item">Bairro : ${user.bairro}</li>
+                            <li class="list-group-item">CEP : ${user.cep}</li>
+                            <li class="list-group-item">Cidade : ${user.cidade}</li>
+                            <li class="list-group-item">Estado : ${user.estado}</li>
+                            <li class="list-group-item">Telefone : ${user.telefone}</li>
 
                         </ul>
                     </div>

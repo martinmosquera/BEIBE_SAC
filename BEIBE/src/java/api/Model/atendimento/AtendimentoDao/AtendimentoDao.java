@@ -7,25 +7,24 @@ package api.Model.atendimento.AtendimentoDao;
 
 import api.Model.atendimento.Atendimento;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import api.Model.users.Pessoa;
 import api.Model.ConnectionFactory.ConnectionFactory;
-import java.sql.Time;
+import api.Model.Exceptions.AtualizaAtendimentoException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import api.Model.produto.Produto;
-import api.Model.produto.ProdutoDao.ProdutoDao;
+import api.Model.Exceptions.ConnectionException;
+import api.Model.Exceptions.ExcluirAtendimentoException;
+import api.Model.Exceptions.InserirAtendimentoException;
+import api.Model.Exceptions.getListaClienteException;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,9 +34,9 @@ public class AtendimentoDao {
     
 // a conexão com o banco de dados
 
-    private ConnectionFactory connectionFactory;
+    private static ConnectionFactory connectionFactory = new ConnectionFactory();
     
-    private final String insert = "insert into atendimento (data,cliente_id,status,produto_id,type,descricao) values (?,?,?,?,?,?)";
+    private static final String insert = "insert into atendimento (data,cliente_id,status,produto_id,type,descricao) values (?,?,?,?,?,?)";
     private final String select = "select * from atendimento";
     private final String update = "update atendimento set funcionario_id=?,status=?,solucao=? WHERE atendimento_id=?";
     private final String delete = "delete from atendimento WHERE atendimento_id=?";
@@ -48,10 +47,10 @@ public class AtendimentoDao {
         this.connectionFactory = conFactory;
     }
 
-    public void inserir(Atendimento atendimento) throws Exception {
-        Connection connection=connectionFactory.getConnection();
+    public static void inserir(Atendimento atendimento) throws InserirAtendimentoException{
+        
         try {
-            
+            Connection connection=connectionFactory.getConnection();
             PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
             String datSt = atendimento.getData() + " " + atendimento.getHora();
             stmtAdiciona.setTimestamp(1, Timestamp.valueOf(datSt));
@@ -68,18 +67,19 @@ public class AtendimentoDao {
             int i = rs.getInt(1);
             atendimento.setId(i);
             
-        } catch(Exception e) {
-            throw new Exception(e);
+        } catch(SQLException | ConnectionException e) {
+            throw new InserirAtendimentoException(e);
         } 
     }
     
-    public List<Atendimento> getListaCliente(Cliente cliente) throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        ResultSet rs = null;
-        PreparedStatement stmtLista = connection.prepareStatement(selectforcliente);
-        int id = cliente.getId();
-        stmtLista.setInt(1, id);
+    public List<Atendimento> getListaCliente(Cliente cliente) throws getListaClienteException{
+        
         try {
+            Connection connection=connectionFactory.getConnection();
+            ResultSet rs = null;
+            PreparedStatement stmtLista = connection.prepareStatement(selectforcliente);
+            int id = cliente.getId();
+            stmtLista.setInt(1, id);
             rs = stmtLista.executeQuery();
             List<Atendimento> atendimentos = new ArrayList<Atendimento>();
             while (rs.next()) {
@@ -101,21 +101,21 @@ public class AtendimentoDao {
             
             return atendimentos;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally{
-            rs.close();
-            stmtLista.close();
-        }
+            throw new getListaClienteException(e);
+        } catch (ConnectionException ex) {
+            throw new getListaClienteException(ex);
+        } 
 
         
     }
 
     public List<Atendimento> getListaFuncionario(Funcionario funcionario) throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        ResultSet rs = null;
-        Produto pr = null;
-        PreparedStatement stmtLista = connection.prepareStatement(select);
+       
         try {
+             Connection connection=connectionFactory.getConnection();
+            ResultSet rs = null;
+            Produto pr = null;
+            PreparedStatement stmtLista = connection.prepareStatement(select);
             rs = stmtLista.executeQuery();
             List<Atendimento> atendimentos = new ArrayList<Atendimento>();
             List<Atendimento> atendimentoTotal = new ArrayList<Atendimento>();
@@ -135,48 +135,50 @@ public class AtendimentoDao {
             }
             funcionario.setAtendimentos(atendimentos);
             return atendimentoTotal;
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new RuntimeException(e);
-        } finally{
-            rs.close();
-            stmtLista.close();
-        }
+        } 
 
         
     }
     
-    public void atualizar(Atendimento atendimento) throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        PreparedStatement stmtAtualiza = connection.prepareStatement(update);
+    public void atualizar(Atendimento atendimento) throws AtualizaAtendimentoException{
+        
         try {
-                       
+            Connection connection=connectionFactory.getConnection();
+            PreparedStatement stmtAtualiza = connection.prepareStatement(update);    
             stmtAtualiza.setString(1, atendimento.getDescricao());
             stmtAtualiza.setString(2, atendimento.getStatus());
             stmtAtualiza.setString(3, atendimento.getSolucao());
             stmtAtualiza.setInt(4, atendimento.getId());
             
             stmtAtualiza.executeUpdate();
-        } finally{
-            stmtAtualiza.close();
-        }
+        }catch(ConnectionException | SQLException e){
+            throw new AtualizaAtendimentoException(e);
+        } 
 
     }
     
-    public void exluirLista(List<Atendimento> atendimentos) throws SQLException {
+    public void exluirLista(List<Atendimento> atendimentos) throws ExcluirAtendimentoException {
         for(Atendimento atendimento : atendimentos){
-            excluir(atendimento);
+            try {
+                excluir(atendimento);
+            } catch (ExcluirAtendimentoException ex) {
+                throw new ExcluirAtendimentoException(ex);
+            }
         }
     }
 
-    public void excluir(Atendimento atendimento) throws SQLException {
-        Connection connection=connectionFactory.getConnection();
+    public void excluir(Atendimento atendimento) throws ExcluirAtendimentoException {
+       
+        try {
+             Connection connection=connectionFactory.getConnection();
         PreparedStatement stmtExcluir;
         stmtExcluir = connection.prepareStatement(delete);
-        try {
             stmtExcluir.setInt(1, atendimento.getId());
             stmtExcluir.executeUpdate();
-        } finally{
-            stmtExcluir.close();
+        }catch(ConnectionException | SQLException e){
+            throw new ExcluirAtendimentoException(e);
         }
 
     }    

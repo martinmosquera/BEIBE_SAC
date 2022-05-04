@@ -6,6 +6,11 @@
 package api.Model.users.PessoaDao;
 
 import api.Model.ConnectionFactory.ConnectionFactory;
+import api.Model.Exceptions.AtualizaClienteException;
+import api.Model.Exceptions.ConnectionException;
+import api.Model.Exceptions.ErroGetClienteIdException;
+import api.Model.Exceptions.ExcluirClienteException;
+import api.Model.users.Cliente;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import api.Model.users.Pessoa;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,11 +35,12 @@ public class PessoaDao {
     
 // a conexão com o banco de dados
 
-    private ConnectionFactory connectionFactory;
+    private static ConnectionFactory connectionFactory = new ConnectionFactory();
     
     private final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    private final String select = "select * from pessoa";
-    private final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
+    private static final String select = "select * from pessoa";
+    private static final String selectById = "select * from pessoa where user_id=?";
+    private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
     private final String delete = "delete from pessoa WHERE user_id=?";
 
     public PessoaDao(ConnectionFactory conFactory) {
@@ -40,8 +48,8 @@ public class PessoaDao {
     }
 
     public void inserir(Pessoa user) {
-        Connection connection=connectionFactory.getConnection();
         try {
+            Connection connection=connectionFactory.getConnection();
             // prepared statement para inserção
             PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
             // seta os valores
@@ -73,16 +81,17 @@ public class PessoaDao {
             int i = rs.getInt(1);
             user.setId(i);
             
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new RuntimeException(e);
         } 
     }
 
-    public List<Pessoa> getLista() throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        ResultSet rs = null;
-        PreparedStatement stmtLista = connection.prepareStatement(select);
+    public static List<Pessoa> getLista() throws SQLException{
+        
         try {
+            Connection connection=connectionFactory.getConnection();
+            ResultSet rs = null;
+            PreparedStatement stmtLista = connection.prepareStatement(select);
             rs = stmtLista.executeQuery();
             List<Pessoa> usuarios = new ArrayList<Pessoa>();
             while (rs.next()) {
@@ -109,21 +118,17 @@ public class PessoaDao {
             }
             
             return usuarios;
-        } catch (SQLException e) {
+        } catch (SQLException| ConnectionException e) {
             throw new RuntimeException(e);
-        } finally{
-            rs.close();
-            stmtLista.close();
         }
 
     }
 
 
-    public void atualizar(Pessoa user) throws SQLException{
-        Connection connection=connectionFactory.getConnection();
-        PreparedStatement stmtAtualiza = connection.prepareStatement(update);
+    public static void atualizar(Pessoa user) throws AtualizaClienteException{
         try {
-                       
+            Connection connection=connectionFactory.getConnection();
+            PreparedStatement stmtAtualiza = connection.prepareStatement(update);           
             stmtAtualiza.setString(1, user.getNick());
             stmtAtualiza.setString(2, user.getNome());
             stmtAtualiza.setString(3, user.getRua());
@@ -139,29 +144,67 @@ public class PessoaDao {
             stmtAtualiza.setInt(12, user.getId());
             
             stmtAtualiza.executeUpdate();
-        } finally{
-            stmtAtualiza.close();
+        } catch(ConnectionException | SQLException e){
+         throw new AtualizaClienteException(e);
         }
 
     }
     
-    public void exluirLista(List<Pessoa> users) throws SQLException {
+    public void exluirLista(List<Pessoa> users) throws ExcluirClienteException {
         for(Pessoa user : users){
-            excluir(user);
+            try {
+                excluir(user);
+            } catch (ExcluirClienteException ex) {
+                throw new ExcluirClienteException(ex);
+            }
         }
     }
 
-    public void excluir(Pessoa user) throws SQLException {
-        Connection connection=connectionFactory.getConnection();
-        PreparedStatement stmtExcluir;
-        stmtExcluir = connection.prepareStatement(delete);
+    public void excluir(Pessoa user) throws ExcluirClienteException {
         try {
+            Connection connection=connectionFactory.getConnection();
+            PreparedStatement stmtExcluir;
+            stmtExcluir = connection.prepareStatement(delete);
             stmtExcluir.setInt(1, user.getId());
             stmtExcluir.executeUpdate();
-        } finally{
-            stmtExcluir.close();
+        }catch(SQLException | ConnectionException e){
+            throw new ExcluirClienteException(e);
         }
 
-    }    
+    }
+
+    public static Cliente getCliente(int id) throws ErroGetClienteIdException{
+         Cliente cliente = null;
+        PreparedStatement stmtSelect = null;
+        ResultSet rs = null;
+        try{
+            Connection connection= new ConnectionFactory().getConnection();
+            stmtSelect = connection.prepareStatement(selectById);
+            stmtSelect.setInt(1, id);
+            rs = stmtSelect.executeQuery();;
+            rs.next();
+                String nome = rs.getString("user_name");
+                String nick= rs.getString("user_nick");
+                String cpf= rs.getString("cpf");
+                String email= rs.getString("email");
+                String rua= rs.getString("rua");
+                String num= rs.getString("num");
+                String complemento= rs.getString("complemento");
+                String bairro= rs.getString("bairro");
+                String cep= rs.getString("cep");
+                String cidade= rs.getString("cidade");
+                String estado= rs.getString("estado");
+                String telefone= rs.getString("telefone");
+                String senha= rs.getString("senha");
+                String type = rs.getString("user_type");
+                Pessoa c =new Pessoa(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
+                cliente = (Cliente)c;
+                return cliente;
+            
+        }catch(SQLException | ConnectionException e){
+            throw new ErroGetClienteIdException("Erro ao tentar carregar a data "+e.getMessage(),e);
+        }
+    
+    }
 }
 

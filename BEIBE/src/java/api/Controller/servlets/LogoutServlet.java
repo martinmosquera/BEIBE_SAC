@@ -40,7 +40,7 @@ public class LogoutServlet extends HttpServlet {
             String logado = (String)session.getAttribute("logado");
             if(logado != null){
                 session.invalidate();
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
                 request.setAttribute("msg", "Logout Efetuado com Sucesso!");
                 request.setAttribute("page","login.jsp");
                 rd.forward(request, response);
