@@ -30,6 +30,9 @@ public class Atendimento implements Serializable{
     private String type;
     private String descricao;
     private String solucao;
+    private Timestamp datatimef;
+    private Date data_end;
+    private Time hora_end;
 
     public Atendimento() {
     }
@@ -91,6 +94,17 @@ public class Atendimento implements Serializable{
         this.type = type;
         this.funcionario = funcionario;
         this.descricao = descricao; 
+    }
+
+    public Atendimento(int id, Timestamp tmst, Timestamp tmst2, Cliente cliente, String status, Produto pr, String type, String descricao) {
+        this.id = id;
+        this.datatime = tmst;
+        this.datatimef = tmst2;
+        this.cliente = cliente;
+        this.status = status;
+        this.produto = pr;
+        this.type = type;
+        this.descricao = descricao;
     }
 
     public Timestamp getDatatime() {
@@ -179,6 +193,30 @@ public class Atendimento implements Serializable{
 
     public void setSolucao(String Solucao) {
         this.solucao = Solucao;
+    }
+
+    public Timestamp getDatatimef() {
+        return datatimef;
+    }
+
+    public void setDatatimef(Timestamp datatimef) {
+        this.datatimef = datatimef;
+    }
+
+    public Date getData_end() {
+        return data_end;
+    }
+
+    public void setData_end(Date data_end) {
+        this.data_end = data_end;
+    }
+
+    public Time getHora_end() {
+        return hora_end;
+    }
+
+    public void setHora_end(Time hora_end) {
+        this.hora_end = hora_end;
     }
                             
 }

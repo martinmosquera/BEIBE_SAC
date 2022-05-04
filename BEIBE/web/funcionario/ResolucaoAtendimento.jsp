@@ -3,7 +3,10 @@
     Created on : 06/03/2022, 15:15:28
     Author     : Emanu
 --%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:if test="${user == null}" >
+    <c:redirect url="${url}ClienteServlet"></c:redirect>
+</c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -28,35 +31,29 @@
             <a href="PortalFuncionario.jsp">
                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="35" class="d-inline-block align-top" alt="">
             </a>
-            <a href="TodosAtendimentosFuncionario.jsp"><button class="btn btn-light">Listar Todos</button></a><br/>
+            <a href="${url}/FuncionarioServlet?to=listar"><button class="btn btn-light">Listar Todos</button></a><br/>
             <a href="CadastroCategorias.jsp"><button class="btn btn-light">Gerenciar Categorias</button></a><br/>
             <a href="CadastroProduto.jsp"><button class="btn btn-light">Gerenciar Produtos</button></a><br/>
-            <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
+            <a href="${url}/LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
             <h1>Todos os atendimentos</h1>
         <div>
-            <h1>Atendimento xxxx* </h1>
+            <h1>Atendimento ${atendimento.id} </h1>
             <table>
                 <tr>
-                    <th>Data/hora atendimento</th>
-                    <th>Cliente</th>
-                    <th>Situação</th>
+                    <th>Inicio: ${atendimento.datatime}  | Fim ${atendimento.datatimef}</th>
+                    <th>${atendimento.cliente.nome}</th>
+                    <th></th>
                 </tr>
-                <tr>
-                    <td>06-03-2022</td>
-                    <td>xxxx</td>
-                    <td>Aberto</td>
+                <tr>                    
+                    <td>${atendimento.status}</td>
                 </tr>
             </table>
             <table>
                 <tr>
-                    <th>Produto</th>
-                    <th>Tipo Atendimento</th>
-                </tr>
-                <tr>
-                    <td>Produto 1</td>
-                    <td>Reclamação</td>
+                    <th>${atendimento.produto.nome}</th>
+                    <th>${atendimento.type}</th>
                 </tr>
             </table>
             <table>
@@ -64,12 +61,12 @@
                     <th>Descrição Atendimento</th>
                 </tr>
                 <tr>
-                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia pharetra tempor. Donec consequat tempor dolor, nec vehicula purus pellentesque sit amet. Vestibulum eget purus gravida, consectetur sapien non, mattis eros. In tortor massa, hendrerit a odio vestibulum, tincidunt finibus nulla. Proin luctus lectus quis diam ornare bibendum. Nunc sit amet elit libero. Ut laoreet eget nibh vel mollis. Sed ullamcorper mauris eu nibh rhoncus imperdiet. Integer tincidunt aliquet ante quis cursus. Donec facilisis accumsan arcu elementum semper. Nunc non ligula et tortor tempus ultrices et tempor velit. Pellentesque vitae metus sem.</td>
+                    <td>L${atendimento.descricao}</td>
                 </tr>
             </table>
             <h2>Resolução:</h2>
             <p>Descrição da resolução do atendimento:</p>
-            <form action="">
+            <form action="${url}/FuncionarioServlet?to=resolve&id=${atendimento.id}" method="post">
                 <textarea name="mensagem" rows="10" cols="30"></textarea>
                 <br><br><input type="submit" value="ENCERRAR ATENDIMENTO">
             </form>

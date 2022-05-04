@@ -4,6 +4,9 @@
     Author     : Emanu
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:if test="${user == null}" >
+    <c:redirect url="${url}/ClienteServlet"></c:redirect>
+</c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -38,7 +41,7 @@
         </nav>
         <div class="container">
             <h1>Todos os atendimentos</h1>
-           
+                <div class="text-success"> ${msg}</div>
             <br><table>
               <tr>
                 <th>#ID</th>
@@ -50,12 +53,12 @@
               </tr>
                <c:forEach items="${atendimentosTotal}" var="atendimento">
                 <tr>
-                  <th> Atendimento ${atendimento.getId()} </th>
-                  <th> ${atendimento.getDatatime()} </th>
-                  <th> ${atendimento.getType()} </th>
-                  <th> ${atendimento.getStatus()} </th>
-                  <th> ${atendimento.getDescricao()} </th>
-                  <td><a href="ResolucaoAtendimento.jsp"><button class="btn btn-secondary" type="button">Resolver</button></a></td>
+                  <th> Atendimento ${atendimento.id} </th>
+                  <th> ${atendimento.datatime} </th>
+                  <th> ${atendimento.type} </th>
+                  <th> ${atendimento.status} </th>
+                  <th> ${atendimento.descricao} </th>
+                  <td><a href="${url}/FuncionarioServlet?to=showResolve&id=${atendimento.id}"><button class="btn btn-secondary" type="button">Resolver</button></a></td>
                  </tr>
                </c:forEach>
               

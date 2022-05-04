@@ -193,9 +193,8 @@ public class PessoaDao {
                 String telefone= rs.getString("telefone");
                 String senha= rs.getString("senha");
                 String type = rs.getString("user_type");
-                Pessoa c =new Pessoa(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
-                cliente = (Cliente)c;
-                return cliente;
+                Cliente c =new Cliente(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
+                return c;
             
         }catch(SQLException | ConnectionException e){
             throw new ErroGetClienteIdException("Erro ao tentar carregar a data "+e.getMessage(),e);
