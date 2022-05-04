@@ -43,6 +43,10 @@ public class LogoutServlet extends HttpServlet {
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
                 request.setAttribute("msg", "Logout Efetuado com Sucesso!");
                 request.setAttribute("page","login.jsp");
+                String host = "http://"+ request.getServerName() + ":"+request.getServerPort();
+                String home = request.getContextPath();
+                String url = host+home;
+                request.getSession().setAttribute("url", url);
                 rd.forward(request, response);
             }else{
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
