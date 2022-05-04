@@ -55,7 +55,11 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-      
+        
+        String host = "http://"+ request.getServerName() + ":"+request.getServerPort();
+        String home = request.getContextPath();
+        String url = host+home;
+        request.getSession().setAttribute("url", url);
         String login = request.getParameter("user");
         String pass = request.getParameter("pass");
         String message = "";
@@ -69,6 +73,7 @@ public class LoginServlet extends HttpServlet {
         if(loginValido(login,pass,request,response,uDao,aDao,cDao)){
             String page = (String)request.getAttribute("page"); 
             response.sendRedirect(page);
+//            getServletContext().getRequestDispatcher(page).forward(request, response);
             
         }else{
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
