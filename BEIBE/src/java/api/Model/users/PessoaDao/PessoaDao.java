@@ -12,6 +12,7 @@ import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.ExcluirClienteException;
 import api.Model.Exceptions.InserirClienteException;
 import api.Model.users.Cliente;
+import api.Model.users.Funcionario;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -200,6 +201,45 @@ public class PessoaDao {
             throw new ErroGetClienteIdException("Erro ao tentar carregar a data "+e.getMessage(),e);
         }
     
+    }
+    
+    public static ArrayList<Funcionario> getFuncionarios() throws ErroGetClienteIdException{
+        ArrayList<Funcionario> funcionarios = null;
+        PreparedStatement stmtSelect = null;
+        ResultSet rs = null;
+        
+        try{
+            Connection connection= new ConnectionFactory().getConnection();
+            stmtSelect = connection.prepareStatement("SELECT * FROM pessoa WHERE user_type=?");
+            stmtSelect.setString(1, "F");
+            rs = stmtSelect.executeQuery();
+            while(rs.next()){
+              
+                String id = rs.getString("id");
+                String nome = rs.getString("user_name");
+                String nick= rs.getString("user_nick");
+                String cpf= rs.getString("cpf");
+                String email= rs.getString("email");
+                String rua= rs.getString("rua");
+                String num= rs.getString("num");
+                String complemento= rs.getString("complemento");
+                String bairro= rs.getString("bairro");
+                String cep= rs.getString("cep");
+                String cidade= rs.getString("cidade");
+                String estado= rs.getString("estado");
+                String telefone= rs.getString("telefone");
+                String senha= rs.getString("senha");
+                String type = rs.getString("user_type");
+                Funcionario f =new Funcionario(new Pessoa(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type));
+                funcionarios.add(f);
+                
+            }
+            return funcionarios;
+            
+        }catch(SQLException | ConnectionException e){
+            throw new ErroGetClienteIdException("Erro ao tentar carregar a data "+e.getMessage(),e);
+        }
+        
     }
 }
 

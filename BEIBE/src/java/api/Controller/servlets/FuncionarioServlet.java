@@ -64,7 +64,7 @@ public class FuncionarioServlet extends HttpServlet {
         }catch(IOException | ServletException e){
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>"+e.getMessage());
-                request.setAttribute("page", "portal.jsp");
+                request.setAttribute("page", "PortalFuncionario.jsp");
                 rd.forward(request, response);
         }
         

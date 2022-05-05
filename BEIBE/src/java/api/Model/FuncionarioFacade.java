@@ -10,18 +10,34 @@ import api.Model.Categoria.CategoriaDao.CategoriaDao;
 import api.Model.Exceptions.ApagaCategoriaException;
 import api.Model.Exceptions.AppException;
 import api.Model.Exceptions.AtualizaCategoriaException;
+import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.GetAtendimentoException;
 import api.Model.Exceptions.ResolveAtendimentoException;
 import api.Model.Exceptions.addCategoriaException;
 import api.Model.Exceptions.getCategoriaException;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
+import api.Model.users.PessoaDao.PessoaDao;
+import api.Model.users.PessoaDao.PessoaDao;
+
+import api.Model.users.Funcionario;
+import java.util.ArrayList;
 
 /**
  *
  * @author dell
  */
 public class FuncionarioFacade {
+    
+    public static ArrayList<Funcionario> listFuncionarios() throws AppException{
+        try{
+            ArrayList<Funcionario> fList = PessoaDao.getFuncionarios();
+            return fList;
+        } catch(ErroGetClienteIdException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     
     public static void resolver(int id) throws AppException{
     

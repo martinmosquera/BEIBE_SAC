@@ -33,7 +33,7 @@ public class Funcionario extends Pessoa implements Serializable{
        setEstado(user.getEstado());
        setTelefone(user.getTelefone());
        setSenha(user.getSenha());
-       setType(user.getSenha());
+       setType(user.getType());
     }
 
     public List<Atendimento> getAtendimentos() {

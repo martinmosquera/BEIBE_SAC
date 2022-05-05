@@ -230,5 +230,44 @@ public class AtendimentoDao {
         }
     
     }
+    
+    public static ArrayList<Atendimento> getAtendimentos(boolean open)throws GetAtendimentoException{
+        ArrayList<Atendimento> atendimentos = null; 
+        try{
+            String SQL = "";
+            if(open) {
+                SQL = "SELECT * FROM atendimento";
+            }
+            else{
+                SQL = "SELECT * FROM atendimento WHERE solucao=null";
+            }
+        
+            Connection conn = connectionFactory.getConnection();
+            PreparedStatement stmtGet = conn.prepareStatement(SQL);
+            ResultSet rs;
+            rs = stmtGet.executeQuery();
+            while(rs.next()){
+                int cliente_id = rs.getInt("cliente_id");
+                Cliente cliente = ClienteFacade.getCliente(cliente_id);
+                Timestamp tmst = rs.getTimestamp("data");
+                Timestamp tmst2 = rs.getTimestamp("data_end");
+                String status = rs.getString("status");
+                Integer id = rs.getInt("id");
+                int produto_id = rs.getInt("produto_id");
+                Produto pr = new Produto(1,"nuevo");
+                String type = rs.getString("type");
+                String descricao = rs.getString("descricao");
+
+                Atendimento a = new Atendimento(id,tmst,tmst2,cliente,status,pr,type,descricao);
+                atendimentos.add(a);
+            }
+            return atendimentos;
+        }catch(SQLException | ConnectionException e){
+            throw new GetAtendimentoException(e);
+        } catch (AppException ex) {
+            throw new GetAtendimentoException(ex);
+        }
+    
+    }
 }
 
