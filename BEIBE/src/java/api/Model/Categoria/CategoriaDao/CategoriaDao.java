@@ -7,8 +7,11 @@ package api.Model.Categoria.CategoriaDao;
 
 import api.Model.Categoria.Categoria;
 import api.Model.ConnectionFactory.ConnectionFactory;
+import api.Model.Exceptions.ApagaCategoriaException;
+import api.Model.Exceptions.AtualizaCategoriaException;
 import api.Model.Exceptions.ConnectionException;
 import api.Model.Exceptions.ListaCategoriaException;
+import api.Model.Exceptions.addCategoriaException;
 import api.Model.Exceptions.getCategoriaException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +29,11 @@ public class CategoriaDao {
     private static ConnectionFactory connectionFactory = new ConnectionFactory();
    
     private static final String selectAll = "select * from categoria";
-    private final String selectCategoria = "select * from categoria where id=?";
+    private static final String selectCategoria = "select * from categoria where id=?";
+    private static final String insert = "insert into categoria (nome) values (?)";
+    private static final String updateC = "update categoria set nome=? where id=?";
+    private static final String apagar = "delete from categoria where id =?";
+    
     
     public CategoriaDao(ConnectionFactory conFactory) {
         this.connectionFactory = conFactory;
@@ -54,7 +61,7 @@ public class CategoriaDao {
 
     }
     
-    public Categoria getCategoria(int id) throws getCategoriaException{
+    public static Categoria getCategoria(int id) throws getCategoriaException{
         
         try{
             Connection connection=connectionFactory.getConnection();
@@ -77,6 +84,50 @@ public class CategoriaDao {
             
         }catch(SQLException | ConnectionException e){
             throw new getCategoriaException(e);
+        }
+    }
+    
+    public static Categoria addCategoria(String nome) throws addCategoriaException{
+    
+        try{
+            Connection conn = connectionFactory.getConnection();
+            PreparedStatement stmtAdd = conn.prepareStatement(insert,PreparedStatement.RETURN_GENERATED_KEYS);
+            stmtAdd.setString(1, nome);
+            stmtAdd.execute();
+            ResultSet rs = stmtAdd.getGeneratedKeys();
+            rs.next();
+            int a = rs.getInt(1);
+            return new Categoria(a,nome);
+        }catch(SQLException | ConnectionException e){
+            throw new addCategoriaException(e);
+        }
+    }
+    
+    public static void update(Categoria c) throws AtualizaCategoriaException{
+    
+        try{
+            Connection conn = connectionFactory.getConnection();
+            PreparedStatement update = conn.prepareStatement(updateC);
+            update.setString(1, c.getNome());
+            update.setInt(2, c.getId());
+            update .executeQuery();
+            
+            
+        }catch(ConnectionException | SQLException e){
+            throw new AtualizaCategoriaException(e);
+        }
+    }
+    
+     public static void delete(int id) throws ApagaCategoriaException{
+    
+        try{
+            Connection conn = connectionFactory.getConnection();
+            PreparedStatement update = conn.prepareStatement(apagar);
+            update.setInt(1, id);
+            update .execute();
+            
+        }catch(ConnectionException | SQLException e){
+            throw new ApagaCategoriaException(e);
         }
     }
 }

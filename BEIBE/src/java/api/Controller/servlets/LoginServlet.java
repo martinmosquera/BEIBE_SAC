@@ -9,7 +9,6 @@ import api.Model.Categoria.Categoria;
 import api.Model.Categoria.CategoriaDao.CategoriaDao;
 import api.Model.ClienteFacade;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -81,7 +80,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("page", "login.jsp");
             rd.forward(request, response);
         }
-        } catch (Exception ex) {
+        } catch (IOException | ClassNotFoundException | ServletException ex) {
             message = ex.getMessage();
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg","Erro ao tentar processar a solicitude "+message);

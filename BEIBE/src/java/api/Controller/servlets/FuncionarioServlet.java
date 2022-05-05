@@ -5,12 +5,16 @@
  */
 package api.Controller.servlets;
 
+import api.Model.Categoria.Categoria;
 import api.Model.Exceptions.AppException;
 import api.Model.FuncionarioFacade;
 import api.Model.atendimento.Atendimento;
 import api.Model.users.Cliente;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,7 +48,8 @@ public class FuncionarioServlet extends HttpServlet {
         String home = request.getContextPath();
         String url = host+home;
         request.getSession().setAttribute("url", url);
-        
+        String nome;
+        int id;
         HttpSession session = request.getSession(false);
         try{
              String logado = (String)session.getAttribute("logado");
@@ -82,7 +87,7 @@ public class FuncionarioServlet extends HttpServlet {
             
             case "showResolve":
                 try{
-                    int id = Integer.valueOf(request.getParameter("id"));
+                    id = Integer.valueOf(request.getParameter("id"));
                     Atendimento a = FuncionarioFacade.getAtendimento(id);
                     request.getSession().setAttribute("atendimento", a);
                     response.sendRedirect("funcionario/ResolucaoAtendimento.jsp");
@@ -98,15 +103,99 @@ public class FuncionarioServlet extends HttpServlet {
             case "resolve":
                 
                 try{
-                    int id = Integer.valueOf(request.getParameter("id"));
+                    id = Integer.valueOf(request.getParameter("id"));
                     FuncionarioFacade.resolver(id);
-                    request.setAttribute("msg", "Atendimento soluconado com sucesso | ");
+                    request.setAttribute("msg", "Atendimento solucionado com sucesso | ");
                     getServletContext().getRequestDispatcher("/funcionario/TodosAtendimentosFuncionario.jsp").forward(request, response);
                 }catch(AppException e){
                     request.setAttribute("msg", "Nao foi possivel resolver o atendimento | "+e.getMessage());
-                        request.setAttribute("form", "alterar");
-                        erro = getServletContext().getRequestDispatcher("/error.jsp");
-                        erro.forward(request, response);
+                    request.setAttribute("form", "alterar");
+                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro.forward(request, response);
+                }
+                break;
+                
+            case "gCategoria":
+                response.sendRedirect("./funcionario/CadastroCategorias.jsp");
+                break;
+                
+            case "showNewCat":
+                response.sendRedirect("./funcionario/NovaCategoria.jsp");
+                break;
+                
+            case "createCat":
+                nome = request.getParameter("nome");
+                try{
+                    Categoria c = FuncionarioFacade.criaCategoria(nome);
+                    List<Categoria> lc = (List<Categoria>)request.getSession().getAttribute("categorias");
+                    lc.add(c);
+                    request.getSession().setAttribute("categorias", lc);
+                    getServletContext().getRequestDispatcher("/funcionario/CadastroCategorias.jsp").forward(request, response);
+                }catch(AppException e){
+                    request.setAttribute("msg", "Nao foi possivel Cadastrar a Categoria | "+e.getMessage());
+                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro.forward(request, response);
+                }
+                
+                break;
+            case "showFormUC":
+                
+                id = Integer.valueOf(request.getParameter("id"));
+                Categoria c;
+            try {
+                c = FuncionarioFacade.getCategoria(id);
+                request.setAttribute("categoria", c);
+                getServletContext().getRequestDispatcher("/funcionario/AlteraCategoria.jsp").forward(request, response);
+            } catch (AppException ex) {
+                request.setAttribute("msg", "Nao foi possivel obetr a Categoria | "+ex.getMessage());
+                erro = getServletContext().getRequestDispatcher("/error.jsp");
+                erro.forward(request, response);
+                
+            }
+                
+                break;
+                
+            case "updateCat":
+                
+                id = Integer.valueOf(request.getParameter("id"));
+                nome = request.getParameter("nome");
+                
+                try{
+                    Categoria cat = new Categoria(id,nome);
+                    FuncionarioFacade.atualizaCategoria(cat);
+                    List<Categoria> lista = (List<Categoria>)request.getAttribute("categorias");
+                    lista.stream().filter(a -> (a.getId()==id)).forEachOrdered(a -> {
+                        a.setNome(nome);
+            });
+                    request.setAttribute("categorias", lista);
+                    getServletContext().getRequestDispatcher("/funcionario/CadastroCategorias.jsp").forward(request, response);
+                }catch(AppException e){
+                    request.setAttribute("msg", "Nao foi possivel atualizar a Categoria | "+e.getMessage());
+                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro.forward(request, response);
+                }
+                
+                break;
+                
+             case "deleteCat":
+                
+                
+                try{
+                    id = Integer.valueOf(request.getParameter("id"));
+                    FuncionarioFacade.apagaCategoria(id);
+                    List<Categoria> lista = (List<Categoria>)request.getAttribute("categorias");
+                    for(Categoria a : lista){
+                        if(a.getId()==id){
+                        lista.remove(a);
+                        break;
+                        } 
+                    }
+                    request.setAttribute("categorias", lista);
+                    getServletContext().getRequestDispatcher("/funcionario/CadastroCategorias.jsp").forward(request, response);
+                }catch(AppException | NullPointerException e){
+                    request.setAttribute("msg", "Nao foi possivel atualizar a Categoria | "+e.getMessage());
+                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro.forward(request, response);
                 }
                 break;
             

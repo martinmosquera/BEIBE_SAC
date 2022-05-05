@@ -1,8 +1,9 @@
 <%-- 
-    Document   : NovoProduto
-    Created on : Mar 9, 2022, 7:41:04 PM
-    Author     : lucas
+    Document   : AlteraCategoria
+    Created on : 4 de mai de 2022, 21:26:58
+    Author     : dell
 --%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:if test="${user == null}" >
     <c:redirect url="${url}ClienteServlet"></c:redirect>
@@ -12,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Nova Categoria</title>
+        <title>Altera Categoria</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
@@ -26,14 +27,15 @@
                 <a href="${url}/LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
-            <h1>Nova Categoria</h1>
-                <form class="col-8 form-group" method="post" action="${url}/FuncionarioServlet?to=createCat">
+            <h1>Altera Categoria</h1>
+                <form class="col-8 form-group" method="post" action="${url}/FuncionarioServlet?to=updateCat">
                     <div class="form-group mb-2">
                         <label for="nome">Nome:</label>
-                        <input class="form-control" type="text" name="nome" placeholder="Nome categoria" required maxlength="100">
+                        <input hidden="text" value="${categoria.id}" name="id">
+                        <input class="form-control" type="text" name="nome" value="${categoria.nome}" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
-                        <input type="submit" value="Adicionar" class="btn btn-primary" >
+                        <input type="submit" value="Atualizarr" class="btn btn-primary" >
                     </div>
                 </form>
         </div>
