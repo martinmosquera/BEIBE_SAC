@@ -67,19 +67,19 @@ public class GerenteServlet extends HttpServlet {
             case "manageFuncionarios":
                 java.util.ArrayList<Funcionario> funcionarios = FuncionarioFacade.listFuncionarios();
                 request.setAttribute("funcionarios", funcionarios);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/CadastroFuncionarios.jsp");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/gerente/CadastroFuncionarios.jsp");
                 rd.forward(request, response);
                 break;
             case "atendimentosAberto":
                 java.util.ArrayList<Atendimento> atendimentos = GerenteFacade.getAtendimentosEmAberto();
                 request.setAttribute("atendimentos", atendimentos);
-                RequestDispatcher portal = getServletContext().getRequestDispatcher("/PortalGerente.jsp");
+                RequestDispatcher portal = getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp");
                 portal.forward(request, response);
                 break;
             case "atendimentos":
                 java.util.ArrayList<Atendimento> a = GerenteFacade.getAtendimentos();
                 request.setAttribute("atendimentos", a);
-                RequestDispatcher portal2 = getServletContext().getRequestDispatcher("/PortalGerente.jsp");
+                RequestDispatcher portal2 = getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp");
                 portal2.forward(request, response);
                 break;
             default:
