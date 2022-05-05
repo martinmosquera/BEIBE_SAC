@@ -12,6 +12,8 @@ import api.Model.Exceptions.AppException;
 import api.Model.Exceptions.AtualizaCategoriaException;
 import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.GetAtendimentoException;
+import api.Model.Exceptions.GetFuncionarioException;
+import api.Model.Exceptions.ListaCategoriaException;
 import api.Model.Exceptions.ResolveAtendimentoException;
 import api.Model.Exceptions.addCategoriaException;
 import api.Model.Exceptions.getCategoriaException;
@@ -22,6 +24,7 @@ import api.Model.users.PessoaDao.PessoaDao;
 
 import api.Model.users.Funcionario;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -39,10 +42,10 @@ public class FuncionarioFacade {
         return null;
     }
     
-    public static void resolver(int id) throws AppException{
+    public static void resolver(int id,String msg) throws AppException{
     
         try{
-            AtendimentoDao.resolver(id);
+            AtendimentoDao.resolver(id,msg);
         }catch(ResolveAtendimentoException e){
             throw new AppException(e);
         }
@@ -87,6 +90,22 @@ public class FuncionarioFacade {
               CategoriaDao.delete(id);
           }catch(ApagaCategoriaException e){
            throw new AppException(e);
+          }
+      }
+        
+      public static List<Categoria> getListaCategorias() throws AppException{
+          try{
+              return CategoriaDao.Listar();
+          }catch(ListaCategoriaException e){
+              throw new AppException(e);
+          }
+      }
+      
+      public static Funcionario getFuncionario(int id) throws AppException{
+          try{
+              return PessoaDao.getFuncionario(id);
+          }catch(GetFuncionarioException e){
+              throw new AppException(e);
           }
       }
 }

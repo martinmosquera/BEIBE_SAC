@@ -28,16 +28,20 @@
         </nav>
         <div class="container">
             <h1>Altera Categoria</h1>
-                <form class="col-8 form-group" method="post" action="${url}/FuncionarioServlet?to=updateCat">
+                <form class="col-8 form-group" method="post" action="${url}/FuncionarioServlet?to=updateCat&id=${categoria.id}">
                     <div class="form-group mb-2">
                         <label for="nome">Nome:</label>
-                        <input hidden="text" value="${categoria.id}" name="id">
                         <input class="form-control" type="text" name="nome" value="${categoria.nome}" required maxlength="100">
                     </div>
                     <div class="form-group mb-2">
-                        <input type="submit" value="Atualizarr" class="btn btn-primary" >
+                        <input type="submit" value="Alterar" class="btn btn-primary" >
                     </div>
                 </form>
+                    
+        <footer class="bg-light text-center text-lg-start positon-absolute  bottom-0 left-0 right-0 w-100 pt-2">
+            <p style="margin-left:50px">${config.info}</p>
+        </footer>
         </div>
+                    
     </body>
 </html>

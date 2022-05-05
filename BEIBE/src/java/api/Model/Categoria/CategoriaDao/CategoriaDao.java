@@ -32,12 +32,8 @@ public class CategoriaDao {
     private static final String selectCategoria = "select * from categoria where id=?";
     private static final String insert = "insert into categoria (nome) values (?)";
     private static final String updateC = "update categoria set nome=? where id=?";
-    private static final String apagar = "delete from categoria where id =?";
+    private static final String apagaReg = "delete from categoria where id=?";
     
-    
-    public CategoriaDao(ConnectionFactory conFactory) {
-        this.connectionFactory = conFactory;
-    }
     
     public static List<Categoria> Listar() throws ListaCategoriaException{
         
@@ -110,7 +106,7 @@ public class CategoriaDao {
             PreparedStatement update = conn.prepareStatement(updateC);
             update.setString(1, c.getNome());
             update.setInt(2, c.getId());
-            update .executeQuery();
+            update .executeUpdate();
             
             
         }catch(ConnectionException | SQLException e){
@@ -119,13 +115,14 @@ public class CategoriaDao {
     }
     
      public static void delete(int id) throws ApagaCategoriaException{
-    
+         System.out.println("Eqtro aqui en delete");
         try{
+            connectionFactory = new ConnectionFactory();
             Connection conn = connectionFactory.getConnection();
-            PreparedStatement update = conn.prepareStatement(apagar);
-            update.setInt(1, id);
-            update .execute();
-            
+            PreparedStatement apaga = conn.prepareStatement(apagaReg);
+            apaga.setInt(1, id);
+            apaga.executeUpdate();
+         System.out.println("Eqtro aqui endepois da qurey");   
         }catch(ConnectionException | SQLException e){
             throw new ApagaCategoriaException(e);
         }

@@ -30,7 +30,7 @@
         </nav>
         <div class="container">
             <h1>Alterar dados!</h1>
-            <form method="post" class="form-control" action="../ClienteServlet?to=updateUsuario">
+            <form method="post" class="form-control" action="${url}/ClienteServlet?to=updateUsuario">
                <input type="hidden" name="id" value="${user.id}">
                 <label for="nick">Nick Name:</label>
                 <input type="text" class="form-control mb-2" id="nick" name="nick" value="${user.nick}">
@@ -89,7 +89,7 @@
                  <input type="submit" class="btn btn-primary" value="ATUALIZAR CADASTRO">
             </form> 
         </div>
-           <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">
+           <footer class="bg-light text-center text-lg-start bottom-0 left-0 right-0 w-100 pt-2">
                 <p style="margin-left:50px">${config.info}</p>
         </footer>
     </body>

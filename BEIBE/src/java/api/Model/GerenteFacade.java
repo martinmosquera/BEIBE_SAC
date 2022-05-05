@@ -20,7 +20,7 @@ public class GerenteFacade {
     public static ArrayList<Atendimento> getAtendimentosEmAberto(){
         ArrayList<Atendimento> atendimentos = null;
         try {
-            atendimentos = AtendimentoDao.getAtendimentos(true);
+            atendimentos = AtendimentoDao.getAtendimentos();
         } catch (GetAtendimentoException ex) {
             Logger.getLogger(GerenteFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -30,7 +30,7 @@ public class GerenteFacade {
     public static ArrayList<Atendimento> getAtendimentos(){
         ArrayList<Atendimento> atendimentos = null;
         try {
-            atendimentos = AtendimentoDao.getAtendimentos(false);
+            atendimentos = AtendimentoDao.getAtendimentos();
         } catch (GetAtendimentoException ex) {
             Logger.getLogger(GerenteFacade.class.getName()).log(Level.SEVERE, null, ex);
         }

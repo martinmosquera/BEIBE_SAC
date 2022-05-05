@@ -25,6 +25,7 @@ import api.Model.Exceptions.GetAtendimentoException;
 import api.Model.Exceptions.InserirAtendimentoException;
 import api.Model.Exceptions.ResolveAtendimentoException;
 import api.Model.Exceptions.getListaClienteException;
+import api.Model.produto.ProdutoDao.ProdutoDao;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
 import java.util.logging.Level;
@@ -41,12 +42,12 @@ public class AtendimentoDao {
     private static ConnectionFactory connectionFactory = new ConnectionFactory();
     
     private static final String insert = "insert into atendimento (data,cliente_id,status,produto_id,type,descricao) values (?,?,?,?,?,?)";
-    private final String select = "select * from atendimento";
-    private static final String resolve = "update atendimento set status=? where atendimento_id=?";
+    private static final String select = "select * from atendimento";
+    private static final String resolve = "update atendimento set status=?,solucao=? where atendimento_id=?";
     private final String update = "update atendimento set funcionario_id=?,status=?,solucao=? WHERE atendimento_id=?";
     private final String delete = "delete from atendimento WHERE atendimento_id=?";
-    private final String selectforcliente = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao from atendimento WHERE cliente_id=?";
-    private final String selectforfuncionario = "select * from atendimento WHERE funcionario_id=?";
+    private static final String selectforcliente = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao from atendimento WHERE cliente_id=?";
+    private static final String selectforfuncionario = "select * from atendimento WHERE funcionario_id=?";
     private static final String getAtendimento = "select * from atendimento where atendimento_id=?";
     
     public AtendimentoDao(ConnectionFactory conFactory) {
@@ -78,7 +79,7 @@ public class AtendimentoDao {
         } 
     }
     
-    public List<Atendimento> getListaCliente(Cliente cliente) throws getListaClienteException{
+    public static List<Atendimento> getListaCliente(Cliente cliente) throws getListaClienteException{
         
         try {
             Connection connection=connectionFactory.getConnection();
@@ -115,13 +116,14 @@ public class AtendimentoDao {
         
     }
 
-    public List<Atendimento> getListaFuncionario(Funcionario funcionario) throws SQLException{
+    public static Funcionario getListaFuncionario(Funcionario funcionario) throws SQLException{
        
         try {
              Connection connection=connectionFactory.getConnection();
             ResultSet rs = null;
             Produto pr = null;
-            PreparedStatement stmtLista = connection.prepareStatement(select);
+            PreparedStatement stmtLista = connection.prepareStatement(selectforfuncionario);
+            stmtLista.setInt(1, funcionario.getId());
             rs = stmtLista.executeQuery();
             List<Atendimento> atendimentos = new ArrayList<Atendimento>();
             List<Atendimento> atendimentoTotal = new ArrayList<Atendimento>();
@@ -134,13 +136,13 @@ public class AtendimentoDao {
                     String type = rs.getString("type");
                     String descricao = rs.getString("descricao");
                     atendimentoTotal.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));
-                if( funcionario_id == funcionario.getId()){    
+                if( funcionario_id == funcionario.getId()){
                     atendimentos.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));           
                 }
                 
             }
             funcionario.setAtendimentos(atendimentos);
-            return atendimentoTotal;
+            return funcionario;
         } catch (SQLException | ConnectionException e) {
             throw new RuntimeException(e);
         } 
@@ -189,13 +191,14 @@ public class AtendimentoDao {
 
     }
 
-    public static void resolver(int id) throws ResolveAtendimentoException{
+    public static void resolver(int id,String msg) throws ResolveAtendimentoException{
         try{
         
             Connection conn = connectionFactory.getConnection();
             PreparedStatement stmtResolve = conn.prepareStatement(resolve);
             stmtResolve.setString(1,"Fechado");
-            stmtResolve.setInt(2, id);
+            stmtResolve.setString(2, msg);
+            stmtResolve.setInt(3, id);
             stmtResolve.executeUpdate();
         }catch(SQLException | ConnectionException e){
             throw new ResolveAtendimentoException(e);
@@ -231,34 +234,26 @@ public class AtendimentoDao {
     
     }
     
-    public static ArrayList<Atendimento> getAtendimentos(boolean open)throws GetAtendimentoException{
-        ArrayList<Atendimento> atendimentos = null; 
+    public static ArrayList<Atendimento> getAtendimentos()throws GetAtendimentoException{
+        ArrayList<Atendimento> atendimentos = new ArrayList<Atendimento>(); 
         try{
-            String SQL = "";
-            if(open) {
-                SQL = "SELECT * FROM atendimento";
-            }
-            else{
-                SQL = "SELECT * FROM atendimento WHERE solucao=null";
-            }
-        
             Connection conn = connectionFactory.getConnection();
-            PreparedStatement stmtGet = conn.prepareStatement(SQL);
+            PreparedStatement stmtGet = conn.prepareStatement(select);
             ResultSet rs;
             rs = stmtGet.executeQuery();
             while(rs.next()){
                 int cliente_id = rs.getInt("cliente_id");
                 Cliente cliente = ClienteFacade.getCliente(cliente_id);
                 Timestamp tmst = rs.getTimestamp("data");
-                Timestamp tmst2 = rs.getTimestamp("data_end");
+//                Timestamp tmst2 = rs.getTimestamp("data_end");
                 String status = rs.getString("status");
-                Integer id = rs.getInt("id");
+                Integer id = rs.getInt("funcionario_id");
                 int produto_id = rs.getInt("produto_id");
-                Produto pr = new Produto(1,"nuevo");
+                Produto pr = ProdutoDao.getProduto(produto_id);
                 String type = rs.getString("type");
                 String descricao = rs.getString("descricao");
 
-                Atendimento a = new Atendimento(id,tmst,tmst2,cliente,status,pr,type,descricao);
+                Atendimento a = new Atendimento(id,tmst,cliente,status,pr,type,descricao);
                 atendimentos.add(a);
             }
             return atendimentos;

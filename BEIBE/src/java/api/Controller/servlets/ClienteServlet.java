@@ -134,7 +134,7 @@ public class ClienteServlet extends HttpServlet {
                 
             case "updateUsuario":
                 
-                Pessoa user = new Pessoa();
+                Cliente user = new Cliente();
                 user.setId(Integer.valueOf(request.getParameter("id")));
                 user.setNick(request.getParameter("nick"));
                 user.setNome(request.getParameter("nome"));

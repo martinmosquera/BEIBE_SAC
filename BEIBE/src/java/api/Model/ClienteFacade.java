@@ -11,6 +11,7 @@ import api.Model.Exceptions.AtualizaClienteException;
 import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.InserirAtendimentoException;
 import api.Model.Exceptions.InserirClienteException;
+import api.Model.Exceptions.getListaClienteException;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.users.Cliente;
@@ -67,6 +68,24 @@ public class ClienteFacade {
         }catch(InserirClienteException e){
             throw new AppException(e);
         }
+     }
+     
+     public static List<Atendimento> getListaAtendimentos() throws Exception{
+         try{
+             return AtendimentoDao.getAtendimentos();
+         }catch(Exception e){
+             throw new AppException(e);
+         }
+     
+     }
+     
+     public static List<Atendimento> getListaAtendimentos(Cliente cliente) throws Exception{
+         try{
+             return AtendimentoDao.getListaCliente(cliente);
+         }catch(getListaClienteException e){
+             throw new AppException(e);
+         }
+     
      }
     
 }

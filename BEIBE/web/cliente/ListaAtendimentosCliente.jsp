@@ -64,7 +64,7 @@
             </table>
         <hr>
         </div>
-        <footer class="bg-light text-center text-lg-start position-absolute bottom-0 left-0 right-0 w-100 pt-2">
+        <footer class="bg-light text-center text-lg-start bottom-0 left-0 right-0 w-100 pt-2">
                 <p style="margin-left:50px">${config.info}</p>
         </footer>
     </body>

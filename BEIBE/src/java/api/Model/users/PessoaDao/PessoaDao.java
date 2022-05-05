@@ -10,6 +10,7 @@ import api.Model.Exceptions.AtualizaClienteException;
 import api.Model.Exceptions.ConnectionException;
 import api.Model.Exceptions.ErroGetClienteIdException;
 import api.Model.Exceptions.ExcluirClienteException;
+import api.Model.Exceptions.GetFuncionarioException;
 import api.Model.Exceptions.InserirClienteException;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
@@ -39,6 +40,7 @@ public class PessoaDao {
     private static final String selectById = "select * from pessoa where user_id=?";
     private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
     private final String delete = "delete from pessoa WHERE user_id=?";
+    private static final String selectFuncionarios = "SELECT * FROM pessoa WHERE user_type=?";
 
     public PessoaDao(ConnectionFactory conFactory) {
         this.connectionFactory = conFactory;
@@ -204,18 +206,19 @@ public class PessoaDao {
     }
     
     public static ArrayList<Funcionario> getFuncionarios() throws ErroGetClienteIdException{
-        ArrayList<Funcionario> funcionarios = null;
+        ArrayList<Funcionario> funcionarios = new ArrayList<Funcionario>();
         PreparedStatement stmtSelect = null;
         ResultSet rs = null;
         
         try{
-            Connection connection= new ConnectionFactory().getConnection();
-            stmtSelect = connection.prepareStatement("SELECT * FROM pessoa WHERE user_type=?");
-            stmtSelect.setString(1, "F");
+            Connection connection= connectionFactory.getConnection();
+            stmtSelect = connection.prepareStatement(selectFuncionarios);
+            String t = "F";
+            stmtSelect.setString(1, t);
             rs = stmtSelect.executeQuery();
             while(rs.next()){
               
-                String id = rs.getString("id");
+                String id = rs.getString("user_ id");
                 String nome = rs.getString("user_name");
                 String nick= rs.getString("user_nick");
                 String cpf= rs.getString("cpf");
@@ -241,5 +244,39 @@ public class PessoaDao {
         }
         
     }
+     public static Funcionario getFuncionario(int id) throws GetFuncionarioException{
+        Funcionario f = null;
+        PreparedStatement stmtSelect = null;
+        ResultSet rs = null;
+        try{
+            Connection connection= new ConnectionFactory().getConnection();
+            stmtSelect = connection.prepareStatement(selectById);
+            stmtSelect.setInt(1, id);
+            rs = stmtSelect.executeQuery();;
+            rs.next();
+                String nome = rs.getString("user_name");
+                String nick= rs.getString("user_nick");
+                String cpf= rs.getString("cpf");
+                String email= rs.getString("email");
+                String rua= rs.getString("rua");
+                String num= rs.getString("num");
+                String complemento= rs.getString("complemento");
+                String bairro= rs.getString("bairro");
+                String cep= rs.getString("cep");
+                String cidade= rs.getString("cidade");
+                String estado= rs.getString("estado");
+                String telefone= rs.getString("telefone");
+                String senha= rs.getString("senha");
+                String type = rs.getString("user_type");
+                f =new Funcionario(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
+                return f;
+            
+        }catch(SQLException | ConnectionException e){
+            throw new GetFuncionarioException("Erro ao tentar carregar os dados "+e.getMessage(),e);
+        }
+    
+    }
+   
+    
 }
 

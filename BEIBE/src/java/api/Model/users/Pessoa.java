@@ -67,7 +67,20 @@ public class Pessoa implements Serializable{
     }
 
     public Pessoa(String id, String nick, String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha, String type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.nick = nick;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.rua = rua;
+        this.num = num;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cep = cep;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.telefone = telefone;
+        this.senha = senha;
+        this.type = type;
     }
 
     public int getId() {

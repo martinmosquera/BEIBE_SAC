@@ -6,8 +6,8 @@
 package api.Controller.servlets;
 
 import api.Model.Categoria.Categoria;
-import api.Model.Categoria.CategoriaDao.CategoriaDao;
 import api.Model.ClienteFacade;
+import api.Model.Exceptions.GetAtendimentoException;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -18,22 +18,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import api.Model.users.Pessoa;
-import api.Model.ConnectionFactory.ConnectionFactory;
+import api.Model.FuncionarioFacade;
 import api.Model.ProdutoFacade;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import api.Model.produto.Produto;
-import api.Model.produto.ProdutoDao.ProdutoDao;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
 import api.Model.users.Gerente;
 import api.Model.users.PessoaDao.PessoaDao;
-import org.jboss.weld.context.ApplicationContext;
+
 
 /**
  *
@@ -62,17 +59,12 @@ public class LoginServlet extends HttpServlet {
         String login = request.getParameter("user");
         String pass = request.getParameter("pass");
         String message = "";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            ConnectionFactory conn = new ConnectionFactory();
-            PessoaDao uDao = new PessoaDao(conn);
-            AtendimentoDao aDao = new AtendimentoDao(conn);
-            CategoriaDao cDao = new CategoriaDao(conn);
+        try {   
             
-        if(loginValido(login,pass,request,response,uDao,aDao,cDao)){
+        if(loginValido(login,pass,request,response)){
             String page = (String)request.getAttribute("page"); 
-            response.sendRedirect(page);
-//            getServletContext().getRequestDispatcher(page).forward(request, response);
+//            response.sendRedirect(page);
+            getServletContext().getRequestDispatcher(page).forward(request, response);
             
         }else{
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
@@ -80,7 +72,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("page", "login.jsp");
             rd.forward(request, response);
         }
-        } catch (IOException | ClassNotFoundException | ServletException ex) {
+        } catch (IOException | ServletException ex) {
             message = ex.getMessage();
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
             request.setAttribute("msg","Erro ao tentar processar a solicitude "+message);
@@ -137,18 +129,19 @@ public class LoginServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response,PessoaDao uDao,AtendimentoDao aDao,CategoriaDao cDao) {
+    private boolean loginValido(String login, String pass,HttpServletRequest request,HttpServletResponse response) {
         
-            
+             String host = "http://"+ request.getServerName() + ":"+request.getServerPort();
+        String home = request.getContextPath();
+        String url = host+home;
          try{
 
-            List<Pessoa> users =  ClienteFacade.getListaClientes();
-             
+            List<Pessoa> users =  PessoaDao.getLista();
 //                List<Pessoa> users = uDao.getLista();
                 if (users.isEmpty()) return false;
                 
                 List<Produto> lp = ProdutoFacade.getListaProdutos();
-                List<Categoria> cats = cDao.Listar(); 
+                List<Categoria> cats = FuncionarioFacade.getListaCategorias(); 
                 HttpSession session = request.getSession();
                 session.setAttribute("produtos", lp);
                 session.setAttribute("categorias", cats);
@@ -160,7 +153,7 @@ public class LoginServlet extends HttpServlet {
                             if(user.getType().equalsIgnoreCase("U")){
                                 Cliente cliente  = new Cliente(user);
                                 List<Atendimento> lista;
-                                lista = aDao.getListaCliente(cliente);
+                                lista = ClienteFacade.getListaAtendimentos(cliente);
                                 cliente.setLista(lista);
                                 session.setAttribute("atendimentos",lista);
                                 session.setAttribute("user", cliente);
@@ -173,39 +166,34 @@ public class LoginServlet extends HttpServlet {
                             Funcionario funcionario  = new Funcionario(user);
                             List<Atendimento> listaTotal = null;
                             try{
-                                
-                                listaTotal = aDao.getListaFuncionario(funcionario);
-                                List<Atendimento> listaAbertos = new ArrayList<Atendimento>();
-                                for(Atendimento a : funcionario.getAtendimentos()){
-                                    if(a.getStatus().equalsIgnoreCase("aberto"))
-                                        listaAbertos.add(a);
-                                }
-                                session.setAttribute("categorias", cats);
-                                session.setAttribute("atendimentosAbertos", listaAbertos);
+                        /////        
+//                                funcionario = AtendimentoDao.getListaFuncionario(funcionario);
+//                                listaTotal = AtendimentoDao.getAtendimentos();
+//                                listaTotal = AtendimentoDao.getAtendimentos();
                                 session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", funcionario);
                                 session.setAttribute("logado", funcionario.getNick());
-                                request.setAttribute("page","funcionario/PortalFuncionario.jsp");                          
+                                getServletContext().getRequestDispatcher("/funcionario/PortalFuncionario.jsp").forward(request, response);
                                 return true;
                             }catch(Exception e){
                                  RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
-                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
+                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage()+e.getStackTrace());
                                     request.setAttribute("page", "login.jsp");
                                     rd.forward(request, response);
                             }
                         }else if (user.getType().equalsIgnoreCase("G")){
                             
                             Gerente gerente  = new Gerente(user);
-                            Funcionario funcionario = new Funcionario(user);
+//                            Funcionario funcionario = new Funcionario(user);
                             List<Atendimento> listaTotal;
                             try{
 
                                 
-                                listaTotal = aDao.getListaFuncionario(funcionario);
-                                session.setAttribute("atendimentosTotal", listaTotal);
+                             //   listaTotal = AtendimentoDao.getAtendimentos();
+                             //   session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", gerente);
                                 session.setAttribute("logado", gerente.getNick());
-                                request.setAttribute("page","gerente/PortalGerente.jsp");                          
+                                getServletContext().getRequestDispatcher(url+"/funcionario/PortalGerente.jsp").forward(request, response);
                                 return true;
                             }catch(Exception e){
                                  RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");

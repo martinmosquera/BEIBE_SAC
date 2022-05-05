@@ -7,8 +7,10 @@ package api.Controller.servlets;
 
 import api.Model.Categoria.Categoria;
 import api.Model.Exceptions.AppException;
+import api.Model.Exceptions.GetAtendimentoException;
 import api.Model.FuncionarioFacade;
 import api.Model.atendimento.Atendimento;
+import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.users.Cliente;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -74,9 +76,10 @@ public class FuncionarioServlet extends HttpServlet {
             
             case "listar":    
                 try{
-                    
+                    List<Atendimento> la = AtendimentoDao.getAtendimentos();
+                    request.getSession().setAttribute("atendimentos", la);
                     response.sendRedirect("./funcionario/TodosAtendimentosFuncionario.jsp");
-                }catch(IOException e){
+                }catch(IOException | GetAtendimentoException e){
                         request.setAttribute("msg", "Nao foi possivel listar os atendimentos | "+e.getMessage());
                         request.setAttribute("form", "alterar");
                         erro = getServletContext().getRequestDispatcher("/error.jsp");
@@ -104,7 +107,8 @@ public class FuncionarioServlet extends HttpServlet {
                 
                 try{
                     id = Integer.valueOf(request.getParameter("id"));
-                    FuncionarioFacade.resolver(id);
+                    String msg = request.getParameter("mensagem");
+                    FuncionarioFacade.resolver(id,msg);
                     request.setAttribute("msg", "Atendimento solucionado com sucesso | ");
                     getServletContext().getRequestDispatcher("/funcionario/TodosAtendimentosFuncionario.jsp").forward(request, response);
                 }catch(AppException e){
@@ -157,19 +161,18 @@ public class FuncionarioServlet extends HttpServlet {
                 
             case "updateCat":
                 
-                id = Integer.valueOf(request.getParameter("id"));
-                nome = request.getParameter("nome");
-                
                 try{
+                    id = Integer.valueOf(request.getParameter("id"));
+                    nome = request.getParameter("nome");
                     Categoria cat = new Categoria(id,nome);
                     FuncionarioFacade.atualizaCategoria(cat);
-                    List<Categoria> lista = (List<Categoria>)request.getAttribute("categorias");
-                    lista.stream().filter(a -> (a.getId()==id)).forEachOrdered(a -> {
-                        a.setNome(nome);
-            });
-                    request.setAttribute("categorias", lista);
+                    List<Categoria> lista = FuncionarioFacade.getListaCategorias();
+                    for(Categoria cate : lista){
+                        if(cate.getId()==id) cate.setNome(nome);
+                    }
+                    request.getSession().setAttribute("categorias", lista);
                     getServletContext().getRequestDispatcher("/funcionario/CadastroCategorias.jsp").forward(request, response);
-                }catch(AppException e){
+                }catch(AppException | IOException | NumberFormatException | ServletException e){
                     request.setAttribute("msg", "Nao foi possivel atualizar a Categoria | "+e.getMessage());
                     erro = getServletContext().getRequestDispatcher("/error.jsp");
                     erro.forward(request, response);
@@ -183,14 +186,16 @@ public class FuncionarioServlet extends HttpServlet {
                 try{
                     id = Integer.valueOf(request.getParameter("id"));
                     FuncionarioFacade.apagaCategoria(id);
-                    List<Categoria> lista = (List<Categoria>)request.getAttribute("categorias");
-                    for(Categoria a : lista){
-                        if(a.getId()==id){
-                        lista.remove(a);
-                        break;
-                        } 
-                    }
-                    request.setAttribute("categorias", lista);
+//                    List<Categoria> lista = FuncionarioFacade.getListaCategorias();
+//                    for(Categoria a : lista){
+//                        if(a.getId()==id){
+//                        lista.remove(a);
+//                        break;
+//                        } 
+                    List<Categoria> lista = FuncionarioFacade.getListaCategorias();
+                    for(Categoria ce: lista)
+                        if(ce.getId() == id) lista.remove(ce);
+                    request.getSession().setAttribute("categorias", lista);
                     getServletContext().getRequestDispatcher("/funcionario/CadastroCategorias.jsp").forward(request, response);
                 }catch(AppException | NullPointerException e){
                     request.setAttribute("msg", "Nao foi possivel atualizar a Categoria | "+e.getMessage());
