@@ -38,8 +38,8 @@
                 <th>Ação</th>
               </tr>
               <tr>
-                <td>Relatório de Funcionários</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Emitir</button></td>
+                  <td>Relatório de Funcionários</td>
+                <td><a href="${url}/GeraRelatorioServlet"><button class="btn btn-secondary" type="button" onclick="">Emitir</button></a></td>
               </tr>
               <tr>
                 <td>Relatório de Produtos Mais Reclamados</td>
@@ -47,8 +47,8 @@
               </tr>
               <tr>
                 <td>Relatório de Atendmientos em Aberto por Data</td>
-                <td><button class="btn btn-secondary" type="button" onclick="">Emitir</button></td>
-              </tr>
+                <td><a href="${url}/GeraRelatorioServletData"><button class="btn btn-secondary" type="button" onclick="">Emitir</button></a></td>
+              
               <tr>
                 <td>Relatório de Reclamações</td>
                 <td><button class="btn btn-secondary" type="button" onclick="">Emitir</button></td>
