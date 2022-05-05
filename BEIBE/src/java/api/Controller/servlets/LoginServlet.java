@@ -193,7 +193,7 @@ public class LoginServlet extends HttpServlet {
                              //   session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", gerente);
                                 session.setAttribute("logado", gerente.getNick());
-                                getServletContext().getRequestDispatcher(url+"/funcionario/PortalGerente.jsp").forward(request, response);
+                                getServletContext().getRequestDispatcher("/GerenteServlet?to=atendimentos").forward(request, response);
                                 return true;
                             }catch(Exception e){
                                  RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");

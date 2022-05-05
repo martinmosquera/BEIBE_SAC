@@ -12,6 +12,8 @@ import api.Model.FuncionarioFacade;
 import api.Model.atendimento.Atendimento;
 import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.users.Cliente;
+import api.Model.users.Funcionario;
+import api.Model.users.Pessoa;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -203,6 +205,28 @@ public class FuncionarioServlet extends HttpServlet {
                     erro.forward(request, response);
                 }
                 break;
+             case "newFunc":
+                 Funcionario f = new Funcionario(request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha"),"F");
+                    {
+                        try {
+                            FuncionarioFacade.insereFuncionario(f);
+                        } catch (AppException ex) {
+                            Logger.getLogger(FuncionarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                 break;
+            case "editFunc":
+                 Funcionario func = new Funcionario(new Pessoa(request.getParameter("id"),request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha")));
+                    {
+                        try {
+                            FuncionarioFacade.editaFunc(func);
+                        } catch (AppException ex) {
+                            Logger.getLogger(FuncionarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
+             default:
+                 break;
             
     }
     }

@@ -43,6 +43,8 @@ public class GerenteServlet extends HttpServlet {
             throws ServletException, IOException, AppException {
         response.setContentType("text/html;charset=UTF-8");
         
+        RequestDispatcher portal = getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp");
+        
         HttpSession session = request.getSession(false);
         try{
              String logado = (String)session.getAttribute("logado");
@@ -57,7 +59,7 @@ public class GerenteServlet extends HttpServlet {
         }catch(IOException | ServletException e){
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                 request.setAttribute("msg", "Erro ao tentar validar o usuario<br/>"+e.getMessage());
-                request.setAttribute("page", "PortalGerente.jsp");
+                request.setAttribute("page", "/gerente/PortalGerente.jsp");
                 rd.forward(request, response);
         }
         
@@ -73,16 +75,29 @@ public class GerenteServlet extends HttpServlet {
             case "atendimentosAberto":
                 java.util.ArrayList<Atendimento> atendimentos = GerenteFacade.getAtendimentosEmAberto();
                 request.setAttribute("atendimentos", atendimentos);
-                RequestDispatcher portal = getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp");
+                
                 portal.forward(request, response);
                 break;
-            case "atendimentos":
-                java.util.ArrayList<Atendimento> a = GerenteFacade.getAtendimentos();
-                request.setAttribute("atendimentos", a);
-                RequestDispatcher portal2 = getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp");
-                portal2.forward(request, response);
+            case "deleteFunc":
+                String string_id = request.getParameter("id");
+                if(string_id == null) break;
+                FuncionarioFacade.deletaFuncionario(Integer.parseInt(string_id));
+                
+                portal.forward(request, response);
+                break;
+            case "editFunc":
+                String func_id = request.getParameter("id");
+                if(func_id == null) break;
+                Funcionario f = FuncionarioFacade.getFuncionario(Integer.parseInt(func_id));
+                
+                request.setAttribute("funcionario", f);
+                RequestDispatcher editFunc = getServletContext().getRequestDispatcher("/gerente/NovoFuncionario.jsp");
+                editFunc.forward(request, response);
                 break;
             default:
+                java.util.ArrayList<Atendimento> a = GerenteFacade.getAtendimentos();
+                request.setAttribute("atendimentos", a);
+                portal.forward(request, response);
                 break;
                   
                 
