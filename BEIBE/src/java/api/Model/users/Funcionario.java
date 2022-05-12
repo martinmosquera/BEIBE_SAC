@@ -26,6 +26,24 @@ public class Funcionario extends Pessoa implements Serializable{
         super(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
     }
     
+        public Funcionario(String nick, String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha, String type) {
+        this.setNick(nick);
+        this.setNome(nome);
+        this.setCpf(cpf);
+        this.setEmail(email);
+        this.setRua(rua);
+        this.setNum(num);
+        this.setComplemento(complemento);        
+        this.setBairro(bairro);
+        this.setCep(cep);
+        this.setCidade(cidade); 
+        this.setEstado(estado);
+        this.setTelefone(telefone);
+        this.setType("F");
+        this.setSenha(senha);
+    }
+    
+    
     public Funcionario(Pessoa p){
         super(p);
     }

@@ -38,13 +38,55 @@ public class PessoaDao {
     private static final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String select = "select * from pessoa";
     private static final String selectById = "select * from pessoa where user_id=?";
+
     private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=?,email=?,cpf=? WHERE user_id=?";
     private final String delete = "delete from pessoa WHERE user_id=?";
+
     private static final String selectFuncionarios = "SELECT * FROM pessoa WHERE user_type=?";
 
     public PessoaDao(ConnectionFactory conFactory) {
         this.connectionFactory = conFactory;
     }
+    
+    public static void inserir(Funcionario user) throws InserirClienteException {
+                try {
+            Connection connection=connectionFactory.getConnection();
+            // prepared statement para inserção
+            PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+            // seta os valores
+            
+            stmtAdiciona.setString(1, user.getNick());
+            stmtAdiciona.setString(2, user.getNome());
+            stmtAdiciona.setString(3, user.getCpf());
+            stmtAdiciona.setString(4, user.getEmail());
+            stmtAdiciona.setString(5, user.getRua());
+            stmtAdiciona.setString(6, user.getNum());
+            stmtAdiciona.setString(7, user.getComplemento());
+            stmtAdiciona.setString(8, user.getBairro());
+            stmtAdiciona.setString(9, user.getCep());
+            stmtAdiciona.setString(10, user.getCidade());
+            stmtAdiciona.setString(11, user.getEstado());
+            stmtAdiciona.setString(12, user.getTelefone());
+            stmtAdiciona.setString(13, user.getSenha());
+            stmtAdiciona.setString(14, user.getType());
+              
+            LocalDate now = LocalDate.now();
+            Date nova = Date.valueOf(now);
+            stmtAdiciona.setDate(15, nova);
+            stmtAdiciona.setDate(16, nova);
+            // executa
+            stmtAdiciona.execute();
+            //Seta o id do contato
+            ResultSet rs = stmtAdiciona.getGeneratedKeys();
+            rs.next();
+            int i = rs.getInt(1);
+            user.setId(i);
+            
+        } catch (SQLException | ConnectionException e) {
+            throw new InserirClienteException(e);
+        } 
+    }
+
 
     public static void inserir(Cliente user) throws InserirClienteException{
         try {
@@ -153,19 +195,18 @@ public class PessoaDao {
     public void exluirLista(List<Pessoa> users) throws ExcluirClienteException {
         for(Pessoa user : users){
             try {
-                excluir(user);
+                excluir(user.getId());
             } catch (ExcluirClienteException ex) {
                 throw new ExcluirClienteException(ex);
             }
         }
     }
 
-    public void excluir(Pessoa user) throws ExcluirClienteException {
+    public static void excluir(Integer id) throws ExcluirClienteException {
         try {
             Connection connection=connectionFactory.getConnection();
-            PreparedStatement stmtExcluir;
-            stmtExcluir = connection.prepareStatement(delete);
-            stmtExcluir.setInt(1, user.getId());
+            PreparedStatement stmtExcluir = connection.prepareStatement(delete);
+            stmtExcluir.setInt(1, id);
             stmtExcluir.executeUpdate();
         }catch(SQLException | ConnectionException e){
             throw new ExcluirClienteException(e);

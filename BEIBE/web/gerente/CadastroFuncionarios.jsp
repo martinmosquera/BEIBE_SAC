@@ -29,9 +29,6 @@
                 <a href="PortalGerente.jsp">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="35" class="d-inline-block align-top" alt="">
                 </a>
-                <a href="TodosAtendimentosGerente.jsp"><button class="btn btn-light">Listar Todos</button></a><br/>
-                <a href="CadastroFuncionarios.jsp"><button class="btn btn-light">Gerenciar funcionários</button></a><br/>
-                <a href="Relatorios.jsp"><button class="btn btn-light">Relatórios</button></a><br/>
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
@@ -43,8 +40,9 @@
               <tr>
                 <th>Nome</th>
                 <th>Cargo</th>
+                <th>Email</th>
+                <th>Cpf</th>
                 <th>Alterar</th>
-                <th>Vizualizar</th>
                 <th>Remover</th>
               </tr>
               
@@ -52,9 +50,17 @@
                 <tr>
                   <td>${f.nome}</td>
                   <td>${f.cargo}</td>
-                  <td><a class="btn btn-secondary" type="button" href="">Alterar</a></td>
-                  <td><a class="btn btn-secondary" type="button" href="">Vizualizar</a></td>
-                  <td><a class="btn btn-secondary" type="button" href="">Remover</a></td>
+                  <td>${f.email}</td>
+                  <td>${f.cpf}</td>
+                  <td><a class="btn btn-secondary" type="button" href="GerenteServlet?to=editFunc">Alterar</a></td>
+                  <td><button class="btn btn-secondary" type="button" onclick="remover(${f.id})">Remover</a></button>
+                  <script>
+                  function remover(id){
+                    if(window.confirm("Você quer realmente deletar esse funcionário?")){
+                        window.open("GerenteServlet?to=deleteFunc&id="+id);
+                    }  
+                  }
+                  </script>
                 </tr>
               </c:forEach>
             </table>

@@ -262,7 +262,7 @@ public class AtendimentoDao {
         ArrayList<Atendimento> atendimentos = new ArrayList<>(); 
         try{
             Connection conn = connectionFactory.getConnection();
-            PreparedStatement stmtGet = conn.prepareStatement(select);
+            PreparedStatement stmtGet = conn.prepareStatement(select + "order by data");
             ResultSet rs;
             rs = stmtGet.executeQuery();
             while(rs.next()){

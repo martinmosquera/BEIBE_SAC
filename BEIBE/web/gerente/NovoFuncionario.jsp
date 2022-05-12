@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Novo Funcionário</title>
+        <title>Funcionário</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
       
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -23,28 +23,44 @@
                 <a href="../LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
-            <h1>Novo Funcionário</h1>
-                <form class="col-8 form-group" method="post" action="../RegisterServlet">
+            <c:if test="${empty funcionario}">
+                
+                <h1>Novo Funcionário</h1>
+                 <form class="col-8 form-group" method="post" action="FuncionarioServlet?to=newFunc">
+            </c:if>
+            <c:if test="${not empty funcionario}">
+                
+                <h1>Editar Funcionário</h1>
+                <form class="col-8 form-group" method="post" action="FuncionarioServlet?to=editFunc">
+            </c:if>
+                
                     <div class="form-group mb-2">
                         <label for="nick">Nome:</label>
-                        <input class="form-control" type="text" name="nick" placeholder="Nome">
+                        <input class="form-control" type="text" name="nick" placeholder="Nome" value="${funcionario.nick}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="peso">Cargo</label>
-                        <input class="form-control" type="text" name="cargo" placeholder="Cargo">
+                        <input class="form-control" type="text" name="cargo" placeholder="Cargo" value="${funcionario.cargo}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="peso">CPF</label>
-                        <input class="form-control" type="text" id="cpf" name="cpf" placeholder="CPF" maxlength="100">
+                        <input class="form-control" type="text" id="cpf" name="cpf" placeholder="CPF" maxlength="100" value="${funcionario.cpf}">
                         <script type="text/javascript">$("#cpf").mask("000.000.000-00");</script>
                     </div>
                    <div class="form-group mb-2">
                         <label for="peso">Email</label>
-                        <input class="form-control" type="email" name="email" placeholder="Email">
+                        <input class="form-control" type="email" name="email" placeholder="Email" value="${funcionario.email}">
                     </div>
-                    <div class="form-group mb-2">
-                        <a href="CadastroFuncionarios.jsp" class="btn btn-primary" >Adicionar</a>
-                    </div>
+                    <c:if test="${not empty funcionario}">
+                        <div class="form-group mb-2">
+                            <a href="CadastroFuncionarios.jsp" class="btn btn-primary" >Editar</a>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty funcionario}">
+                        <div class="form-group mb-2">
+                            <a href="CadastroFuncionarios.jsp" class="btn btn-primary" >Adicionar</a>
+                        </div>
+                    </c:if>
                 </form>
         </div>
         <footer class="bg-light text-center text-lg-start  bottom-0 left-0 right-0 w-100 pt-2">
