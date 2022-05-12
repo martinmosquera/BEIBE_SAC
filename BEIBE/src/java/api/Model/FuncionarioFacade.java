@@ -108,4 +108,13 @@ public class FuncionarioFacade {
               throw new AppException(e);
           }
       }
+      
+      public static List<Atendimento> getListaAtendimentos() throws AppException{
+      
+      try{
+          return AtendimentoDao.getAtendimentos();
+      }catch(GetAtendimentoException e){
+          throw new AppException(e);
+      }
+      }
 }

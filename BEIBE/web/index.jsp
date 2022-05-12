@@ -20,12 +20,12 @@
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="30" class="d-inline-block align-top" alt="">
             <a href="./" class="navbar-nav">Home</a>
-            <a href="./ClienteServlet?to=sobre">Sobre</a>
-            <a href="./ClienteServlet?to=login">Login</a>
+            <a href="ClienteServlet?to=sobre">Sobre</a>
+            <a href="ClienteServlet?to=login">Login</a>
         </nav>
         <div class="container">
             <div class="d-flex">
-                <img height="350" width="350" style="object-fit: cover" class="rounded-circle" src="https://www.1900luxury.com/wp-content/uploads/2531-where-to-find-rare-beauty-selena-gomezs-beauty-line-in-hong-kong.jpg"/>
+                <img height="350" width="350" style="object-fit: cover" class="rounded-circle" src="assets/img/home.png"/>
                 <div class="mx-5">
                     <h1>BEIBE - Beauty Embuste Indústria de Beleza e Estética</h1>
                     <p>A BEIBE é uma empresa de Embelezamento Artificial, voltada ao público jovem e adulto que quer fazer a diferença no mundo.</p>

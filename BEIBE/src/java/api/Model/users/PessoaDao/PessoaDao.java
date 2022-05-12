@@ -38,7 +38,7 @@ public class PessoaDao {
     private static final String insert = "insert into pessoa (user_nick,user_name,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,user_type,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String select = "select * from pessoa";
     private static final String selectById = "select * from pessoa where user_id=?";
-    private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=? WHERE user_id=?";
+    private static final String update = "update pessoa set user_nick=?,user_name=?,rua=?,num=?,complemento=?,bairro=?,cep=?,cidade=?,estado=?,telefone=?,senha=?,email=?,cpf=? WHERE user_id=?";
     private final String delete = "delete from pessoa WHERE user_id=?";
     private static final String selectFuncionarios = "SELECT * FROM pessoa WHERE user_type=?";
 
@@ -139,8 +139,9 @@ public class PessoaDao {
             stmtAtualiza.setString(9, user.getEstado());
             stmtAtualiza.setString(10, user.getTelefone());
             stmtAtualiza.setString(11, user.getSenha());
-            
-            stmtAtualiza.setInt(12, user.getId());
+            stmtAtualiza.setString(12, user.getEmail());
+            stmtAtualiza.setString(13, user.getCpf());
+            stmtAtualiza.setInt(14, user.getId());
             
             stmtAtualiza.executeUpdate();
         } catch(ConnectionException | SQLException e){

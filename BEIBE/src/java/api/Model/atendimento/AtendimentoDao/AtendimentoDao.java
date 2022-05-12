@@ -25,11 +25,12 @@ import api.Model.Exceptions.GetAtendimentoException;
 import api.Model.Exceptions.InserirAtendimentoException;
 import api.Model.Exceptions.ResolveAtendimentoException;
 import api.Model.Exceptions.getListaClienteException;
+import api.Model.FuncionarioFacade;
 import api.Model.produto.ProdutoDao.ProdutoDao;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -46,7 +47,7 @@ public class AtendimentoDao {
     private static final String resolve = "update atendimento set status=?,solucao=? where atendimento_id=?";
     private final String update = "update atendimento set funcionario_id=?,status=?,solucao=? WHERE atendimento_id=?";
     private final String delete = "delete from atendimento WHERE atendimento_id=?";
-    private static final String selectforcliente = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao from atendimento WHERE cliente_id=?";
+    private static final String selectforcliente = "select atendimento_id,data,cliente_id,status,produto_id,type,descricao,solucao,data_end from atendimento WHERE cliente_id=?";
     private static final String selectforfuncionario = "select * from atendimento WHERE funcionario_id=?";
     private static final String getAtendimento = "select * from atendimento where atendimento_id=?";
     
@@ -59,8 +60,8 @@ public class AtendimentoDao {
         try {
             Connection connection=connectionFactory.getConnection();
             PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-            String datSt = atendimento.getData() + " " + atendimento.getHora();
-            stmtAdiciona.setTimestamp(1, Timestamp.valueOf(datSt));
+            LocalDateTime ld = LocalDateTime.now();
+            stmtAdiciona.setTimestamp(1, Timestamp.valueOf(ld));
             stmtAdiciona.setInt(2, atendimento.getCliente().getId());
             stmtAdiciona.setString(3, atendimento.getStatus());
             stmtAdiciona.setInt(4, atendimento.getProduto().getId());
@@ -92,16 +93,29 @@ public class AtendimentoDao {
             while (rs.next()) {
                 int cliente_id = rs.getInt("cliente_id");
                 if( cliente_id == cliente.getId()){
+                cliente = ClienteFacade.getCliente(cliente_id);
                 int idA = rs.getInt("atendimento_id");
+                int idF = rs.getInt("funcionario_id");
+                Funcionario f;
+                if(idF != 0)
+                f = FuncionarioFacade.getFuncionario(idF);
+                else{
+                f = new Funcionario();
+                f.setId(0);
+                }
                 Timestamp tmst = rs.getTimestamp("data");
-                
+                java.util.Date d = new Date(tmst.getTime());
                 String status = rs.getString("status");
-                int produto_id = rs.getInt("produto_id");
-                Produto pr = new Produto(1,"nuevo");
+                int idP = rs.getInt("produto_id");
+                Produto pr = ProdutoDao.getProduto(idP);
                 String type = rs.getString("type");
                 String descricao = rs.getString("descricao");
+                String solucao = rs.getString("solucao");
+                if(solucao == null) solucao = "";
+                Timestamp tmst2 = rs.getTimestamp("data_end");
+                java.util.Date de = new Date(tmst2.getTime());
 
-                atendimentos.add(new Atendimento(idA,tmst,cliente,status,pr,type,descricao));           
+                atendimentos.add(new Atendimento(idA,d,cliente,f,status,pr,type,descricao,solucao,de));           
                 }
                 
             }
@@ -111,7 +125,9 @@ public class AtendimentoDao {
             throw new getListaClienteException(e);
         } catch (ConnectionException ex) {
             throw new getListaClienteException(ex);
-        } 
+        } catch(AppException e){
+            throw new getListaClienteException(e);
+        }
 
         
     }
@@ -132,18 +148,22 @@ public class AtendimentoDao {
                 
                     int idA = rs.getInt("atendimento_id");
                     Timestamp tmst = rs.getTimestamp("data");
+                    Date d = new Date(tmst.getTime());
+                    Cliente cliente = ClienteFacade.getCliente(rs.getInt("cliente_id"));
                     String status = rs.getString("status");
+                    Funcionario f = FuncionarioFacade.getFuncionario(rs.getInt("funcionario_id"));
+                    String stat = rs.getString("status");
+                    pr = ProdutoDao.getProduto(rs.getInt("produto_id"));
                     String type = rs.getString("type");
                     String descricao = rs.getString("descricao");
-                    atendimentoTotal.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));
-                if( funcionario_id == funcionario.getId()){
-                    atendimentos.add(new Atendimento(idA,tmst,status,type,funcionario,descricao));           
-                }
-                
+                    String solucao = rs.getString("solucao");
+                    Timestamp tmst2 = rs.getTimestamp("date_end");
+                    Date de = new Date(tmst2.getTime());
+                    atendimentoTotal.add(new Atendimento(idA,d,cliente,f,stat,pr,type,descricao,solucao,de));           
             }
             funcionario.setAtendimentos(atendimentos);
             return funcionario;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException | AppException e) {
             throw new RuntimeException(e);
         } 
 
@@ -215,16 +235,20 @@ public class AtendimentoDao {
             rs = stmtGet.executeQuery();
             rs.next();
             int cliente_id = rs.getInt("cliente_id");
-                Cliente cliente = ClienteFacade.getCliente(id);
+                Cliente cliente = ClienteFacade.getCliente(cliente_id);
                 Timestamp tmst = rs.getTimestamp("data");
+                Date d = new Date(tmst.getTime());
+                Funcionario f = FuncionarioFacade.getFuncionario(rs.getInt("funcionario_id"));
                 Timestamp tmst2 = rs.getTimestamp("data_end");
-                String status = rs.getString("status");
+                String stat = rs.getString("status");
                 int produto_id = rs.getInt("produto_id");
-                Produto pr = new Produto(1,"nuevo");
+                Produto pr = ProdutoDao.getProduto(produto_id);
                 String type = rs.getString("type");
                 String descricao = rs.getString("descricao");
+                String solucao = rs.getString("solucao");
+                Date de = new Date(tmst2.getTime());
 
-                Atendimento a = new Atendimento(id,tmst,tmst2,cliente,status,pr,type,descricao);
+                Atendimento a = new Atendimento(id,d,cliente,f,stat,pr,type,descricao,solucao,de);
                 return a;
         }catch(SQLException | ConnectionException e){
             throw new GetAtendimentoException(e);
@@ -235,26 +259,37 @@ public class AtendimentoDao {
     }
     
     public static ArrayList<Atendimento> getAtendimentos()throws GetAtendimentoException{
-        ArrayList<Atendimento> atendimentos = new ArrayList<Atendimento>(); 
+        ArrayList<Atendimento> atendimentos = new ArrayList<>(); 
         try{
             Connection conn = connectionFactory.getConnection();
             PreparedStatement stmtGet = conn.prepareStatement(select);
             ResultSet rs;
             rs = stmtGet.executeQuery();
             while(rs.next()){
+                int id = rs.getInt("atendimento_id");
                 int cliente_id = rs.getInt("cliente_id");
-                Cliente cliente = ClienteFacade.getCliente(cliente_id);
+               Cliente cliente = ClienteFacade.getCliente(cliente_id);
                 Timestamp tmst = rs.getTimestamp("data");
-//                Timestamp tmst2 = rs.getTimestamp("data_end");
-                String status = rs.getString("status");
-                Integer id = rs.getInt("funcionario_id");
+                Date d = new Date(tmst.getTime());
+                int num = rs.getInt("funcionario_id");
+                Funcionario f;
+                if(num != 0)
+                    f = FuncionarioFacade.getFuncionario(num);
+                else{
+                    f = new Funcionario();
+                    f.setId(0);
+                } 
+                Timestamp tmst2 = rs.getTimestamp("data_end");
+                String stat = rs.getString("status");
                 int produto_id = rs.getInt("produto_id");
                 Produto pr = ProdutoDao.getProduto(produto_id);
                 String type = rs.getString("type");
                 String descricao = rs.getString("descricao");
+                String solucao = rs.getString("solucao");
+                if(solucao == null) solucao = "";
+                Date de = new Date(tmst2.getTime());
 
-                Atendimento a = new Atendimento(id,tmst,cliente,status,pr,type,descricao);
-                atendimentos.add(a);
+                atendimentos.add(new Atendimento(id,d,cliente,f,stat,pr,type,descricao,solucao,de));
             }
             return atendimentos;
         }catch(SQLException | ConnectionException e){

@@ -4,6 +4,7 @@
     Author     : Emanu
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:if test="${user == null}" >
     <c:redirect url="${url}/ClienteServlet"></c:redirect>
 </c:if>
@@ -51,10 +52,10 @@
                 <th>DESCRIÇÃO</th>
                 <th> OPÇÃO </th>
               </tr>
-               <c:forEach items="${atendimentosTotal}" var="atendimento">
+               <c:forEach items="${sessionScope.atendimentosTotal}" var="atendimento">
                 <tr>
                   <th> Atendimento ${atendimento.id} </th>
-                  <th> ${atendimento.datatime} </th>
+                  <th> <fmt:formatDate value="${atendimento.data}" pattern="dd/MM/yyyy HH:mm:ss" /></th>
                   <th> ${atendimento.type} </th>
                   <th> ${atendimento.status} </th>
                   <th> ${atendimento.descricao} </th>

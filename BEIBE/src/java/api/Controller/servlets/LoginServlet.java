@@ -7,7 +7,7 @@ package api.Controller.servlets;
 
 import api.Model.Categoria.Categoria;
 import api.Model.ClienteFacade;
-import api.Model.Exceptions.GetAtendimentoException;
+import api.Model.Exceptions.AppException;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -30,6 +30,7 @@ import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
 import api.Model.users.Gerente;
 import api.Model.users.PessoaDao.PessoaDao;
+import java.util.ArrayList;
 
 
 /**
@@ -63,8 +64,8 @@ public class LoginServlet extends HttpServlet {
             
         if(loginValido(login,pass,request,response)){
             String page = (String)request.getAttribute("page"); 
-//            response.sendRedirect(page);
-            getServletContext().getRequestDispatcher(page).forward(request, response);
+            response.sendRedirect(page);
+//            getServletContext().getRequestDispatcher(page).forward(request, response);
             
         }else{
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
@@ -145,17 +146,17 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("produtos", lp);
                 session.setAttribute("categorias", cats);
-                
+                List<Atendimento >listaTotal = FuncionarioFacade.getListaAtendimentos();
+                session.setAttribute("atendimentosTotal", listaTotal);
                 for(Pessoa user : users){
                     
                     if(user.getNick().equalsIgnoreCase(login)){
                         if(pass.equalsIgnoreCase(user.getSenha())){
                             if(user.getType().equalsIgnoreCase("U")){
-                                Cliente cliente  = new Cliente(user);
-                                List<Atendimento> lista;
-                                lista = ClienteFacade.getListaAtendimentos(cliente);
-                                cliente.setLista(lista);
-                                session.setAttribute("atendimentos",lista);
+                                Pessoa cliente  = new Cliente(user);
+                                Cliente c = (Cliente)cliente;
+                                c.setType("U");
+                                c.setId(user.getId());
                                 session.setAttribute("user", cliente);
                                 session.setAttribute("logado", cliente.getNick());
                                 request.setAttribute("page","cliente/PortalUser.jsp");                          
@@ -164,36 +165,26 @@ public class LoginServlet extends HttpServlet {
                             }else if (user.getType().equalsIgnoreCase("F")){
                             
                             Funcionario funcionario  = new Funcionario(user);
-                            List<Atendimento> listaTotal = null;
                             try{
-                        /////        
-//                                funcionario = AtendimentoDao.getListaFuncionario(funcionario);
-//                                listaTotal = AtendimentoDao.getAtendimentos();
-//                                listaTotal = AtendimentoDao.getAtendimentos();
-                                session.setAttribute("atendimentosTotal", listaTotal);
+                                funcionario.setId(user.getId());
                                 session.setAttribute("user", funcionario);
                                 session.setAttribute("logado", funcionario.getNick());
-                                getServletContext().getRequestDispatcher("/funcionario/PortalFuncionario.jsp").forward(request, response);
+                                request.setAttribute("page", "funcionario/PortalFuncionario.jsp");
                                 return true;
                             }catch(Exception e){
-                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
-                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage()+e.getStackTrace());
+                                 RequestDispatcher rd = getServletContext().getRequestDispatcher("error.jsp");
+                                    request.setAttribute("msg", "Erro ao iniciar sessao do Funcionario <br/>"+e.getMessage());
                                     request.setAttribute("page", "login.jsp");
                                     rd.forward(request, response);
                             }
                         }else if (user.getType().equalsIgnoreCase("G")){
                             
                             Gerente gerente  = new Gerente(user);
-//                            Funcionario funcionario = new Funcionario(user);
-                            List<Atendimento> listaTotal;
                             try{
 
-                                
-                             //   listaTotal = AtendimentoDao.getAtendimentos();
-                             //   session.setAttribute("atendimentosTotal", listaTotal);
                                 session.setAttribute("user", gerente);
                                 session.setAttribute("logado", gerente.getNick());
-                                getServletContext().getRequestDispatcher(url+"/funcionario/PortalGerente.jsp").forward(request, response);
+                                getServletContext().getRequestDispatcher("/gerente/PortalGerente.jsp").forward(request, response);
                                 return true;
                             }catch(Exception e){
                                  RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");

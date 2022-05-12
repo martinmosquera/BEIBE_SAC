@@ -18,14 +18,15 @@
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="30" class="d-inline-block align-top" alt="">
-            <a href="${url}/ClienteServlet?to=home" class="navbar-nav">Home</a>
-            <a href="${url}/ClienteServlet?to=sobre">Sobre</a>
-            <a href="${url}/ClienteServlet?to=login">Login</a>
+            <a href="ClienteServlet?to=home" class="navbar-nav">Home</a>
+            <a href="ClienteServlet?to=sobre">Sobre</a>
+            <a href="ClienteServlet?to=login">Login</a>
         </nav>
         <div class="container">
          
             <h1>Beauty Embuste Indústria de Beleza e Estética</h1>
-    
+            <p>A BEIBE é uma empresa de Embelezamento Artificial, voltada ao público jovem e adulto que quer fazer a diferença no mundo.</p>
+            <p>A Embuste é a marca de beleza preferida dos brasileiros (Fonte: Embuste Estatística, 2018). Todos os nossos produtos tocam sua beleza. É assim que a marca transforma momentos simples em momentos embusteiros há menos de 0 anos.</p>
         </div>
         <footer class="bg-light text-center text-lg-start bottom-0 left-0 right-0 w-100 pt-2">
                 <p style="margin-left:50px">${config.info}</p>
