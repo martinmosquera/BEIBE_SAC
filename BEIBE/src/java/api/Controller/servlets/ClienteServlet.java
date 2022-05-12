@@ -8,11 +8,9 @@ package api.Controller.servlets;
 import api.Model.Categoria.Categoria;
 import api.Model.CategoriaFacade;
 import api.Model.ClienteFacade;
-import api.Model.ConnectionFactory.ConnectionFactory;
 import api.Model.Exceptions.AppException;
 import api.Model.ProdutoFacade;
 import api.Model.atendimento.Atendimento;
-import api.Model.atendimento.AtendimentoDao.AtendimentoDao;
 import api.Model.produto.Produto;
 import api.Model.users.Cliente;
 import api.Model.users.Pessoa;
@@ -58,21 +56,38 @@ public class ClienteServlet extends HttpServlet {
         String url = host+home;
         request.getSession().setAttribute("url", url);
         
-        
+        HttpSession s = request.getSession();
         String action = (String)request.getParameter("to");
         Cliente uCliente;
         RequestDispatcher error;
-        
+        String cpf;
+        String telefone;
+        String cep;
+        if(action == null){
+            request.setAttribute("msg","Onde deseja entrar?");
+            getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
+        }
         if(action.equalsIgnoreCase("home")){
-             getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("formNew")){
              getServletContext().getRequestDispatcher("/cliente/register.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("sobre")){
             getServletContext().getRequestDispatcher("/sobre.jsp").forward(request, response);
         }else if(action.equalsIgnoreCase("login")){
+//            response.sendRedirect("/login.jsp");
+            request.setAttribute("msg", request.getParameter("msg"));
             getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
            }else if(action.equalsIgnoreCase("userNew")){
-            uCliente = new Cliente(request.getParameter("nick"),request.getParameter("nome"),request.getParameter("cpf"),request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),request.getParameter("cep"),request.getParameter("cidade"),request.getParameter("estado"),request.getParameter("tel"),request.getParameter("senha"),"U");
+               cpf = request.getParameter("cpf");
+               cpf = cpf.replace(".","");
+               cpf = cpf.replace("-","");
+               telefone = request.getParameter("tel");
+               telefone = telefone.replace("(","");
+               telefone = telefone.replace(")","");
+               telefone = telefone.replace("-","");
+               cep = request.getParameter("cep");
+               cep = cep.replace("-","");
+            uCliente = new Cliente(request.getParameter("nick"),request.getParameter("nome"),cpf,request.getParameter("email"),request.getParameter("rua"),request.getParameter("num"),request.getParameter("comple"),request.getParameter("bairro"),cep,request.getParameter("cidade"),request.getParameter("estado"),telefone,request.getParameter("senha"),"U");
             try {
                 ClienteFacade.insereUsuario(uCliente);
                 HttpSession session = request.getSession();
@@ -83,11 +98,11 @@ public class ClienteServlet extends HttpServlet {
                 List<Categoria> cats = CategoriaFacade.listarCategorias();
                 session.setAttribute("produtos", lp);
                 session.setAttribute("categorias", cats);
-                getServletContext().getRequestDispatcher("/cliente/PortalUser.jsp").forward(request, response);
+                response.sendRedirect("cliente/PortalUser.jsp");
             } catch (AppException ex) {
                         request.setAttribute("msg", "Erro ao tentar Carregar a pagina |\n " + ex.getMessage());
                         request.setAttribute("form", "alterar");
-                        error = getServletContext().getRequestDispatcher("/error.jsp");
+                        error = getServletContext().getRequestDispatcher("/login.jsp");
                         error.forward(request, response);
             }
         }else{        
@@ -135,6 +150,17 @@ public class ClienteServlet extends HttpServlet {
             case "updateUsuario":
                 
                 Cliente user = new Cliente();
+                
+               cpf = request.getParameter("cpf");
+               cpf = cpf.replace(".","");
+               cpf = cpf.replace("-","");
+               telefone = request.getParameter("tel");
+               telefone = telefone.replace("(","");
+               telefone = telefone.replace(")","");
+               telefone = telefone.replace("-","");
+               cep = request.getParameter("cep");
+               cep = cep.replace("-","");
+                
                 user.setId(Integer.valueOf(request.getParameter("id")));
                 user.setNick(request.getParameter("nick"));
                 user.setNome(request.getParameter("nome"));
@@ -142,21 +168,23 @@ public class ClienteServlet extends HttpServlet {
                 user.setNum(request.getParameter("num"));
                 user.setComplemento(request.getParameter("complemento"));
                 user.setBairro(request.getParameter("bairro"));
-                user.setCep(request.getParameter("cep"));
+                user.setCep(cep);
+                user.setCpf(cpf);
+                user.setEmail(request.getParameter("email"));
                 user.setCidade(request.getParameter("cidade"));
                 user.setEstado(request.getParameter("estado"));
-                user.setTelefone(request.getParameter("telefone"));
+                user.setTelefone(telefone);
                 user.setSenha(request.getParameter("senha"));
              
                 try{
                     ClienteFacade.atualizaCliente(user);
                     session = request.getSession();
                     session.setAttribute("user", user);
-                    response.sendRedirect("./cliente/PortalUser.jsp");                
+                    response.sendRedirect("cliente/PortalUser.jsp");                
                 }catch(AppException | IOException  e){
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
                     request.setAttribute("msg","Erro ao processar a solicitude "+e.getMessage());
-                    request.setAttribute("page","./cliente/PortalUser.jsp");
+                    request.setAttribute("page","cliente/PortalUser.jsp");
                     rd.forward(request, response);
                    }
             
@@ -164,18 +192,19 @@ public class ClienteServlet extends HttpServlet {
                break;
             case "listar":
                 try{
-                    response.sendRedirect("./cliente/ListaAtendimentosCliente.jsp");
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.sendRedirect("cliente/ListaAtendimentosCliente.jsp");
                 }catch(IOException e){
                     request.setAttribute("msg", "Erro ao tentar atualizar o usuario | " + e.getMessage());
                     request.setAttribute("form", "alterar");
-                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro = getServletContext().getRequestDispatcher("error.jsp");
                     erro.forward(request, response);    
                 }
                 break;
                 
             case "newForm":
                 try{
-                    response.sendRedirect("./cliente/CriacaoAtendimentoCliente.jsp");
+                    response.sendRedirect("cliente/CriacaoAtendimentoCliente.jsp");
                 }catch(IOException e){
                         request.setAttribute("msg", "Erro ao tentar atualizar o usuario | " + e.getMessage());
                         request.setAttribute("form", "alterar");
@@ -185,14 +214,17 @@ public class ClienteServlet extends HttpServlet {
                 }
                 break;
                 
-            case "home":
-                
+            case "homeP":
                  try{
-                    response.sendRedirect("./cliente/PortalUser.jsp");
+                    Pessoa p = (Pessoa)session.getAttribute("user");
+                    if(p.getType().equalsIgnoreCase("U"))
+                        response.sendRedirect("cliente/PortalUser.jsp");
+                    else if(p.getType().equalsIgnoreCase("F"))
+                        response.sendRedirect("funcionario/PortalFuncionario.jsp");
                 }catch(IOException e){
                         request.setAttribute("msg", "Erro ao tentar atualizar o usuario | " + e.getMessage());
                         request.setAttribute("form", "alterar");
-                        erro = getServletContext().getRequestDispatcher("/error.jsp");
+                        erro = getServletContext().getRequestDispatcher("error.jsp");
                         erro.forward(request, response);
                         
                 }
@@ -209,13 +241,10 @@ public class ClienteServlet extends HttpServlet {
                 }
                 String descricao = request.getParameter("descricao");
                 cliente = (Cliente)session.getAttribute("user");
-                Atendimento atd = new Atendimento(cliente,type,produto,descricao);
-                Date data = Date.valueOf(LocalDate.now());
-                atd.setData(data);
-                Time tm = Time.valueOf(LocalTime.now());
-                atd.setHora(tm);
-                Timestamp tmst = Timestamp.valueOf(LocalDateTime.now());
-                atd.setDatatime(tmst);
+                Atendimento atd = new Atendimento();
+                atd.setDescricao(descricao);
+                atd.setProduto(produto);
+                atd.setType(type);
                 atd.setCliente(cliente);
                 atd.setStatus("Aberto");
                 
@@ -223,9 +252,9 @@ public class ClienteServlet extends HttpServlet {
                    ClienteFacade.criaAtendimento(atd);
                     cliente.addAtendimento(atd);
                     session.setAttribute("atendimentos",cliente.getLista());
-                    response.sendRedirect("./cliente/ListaAtendimentosCliente.jsp");
+                    response.sendRedirect("cliente/ListaAtendimentosCliente.jsp");
                 }catch(Exception e){
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.jsp");
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("error.jsp");
                     request.setAttribute("msg", e.getMessage());
                     request.setAttribute("page", "cliente/PortalUser.jsp");
                     rd.forward(request, response);
@@ -233,13 +262,13 @@ public class ClienteServlet extends HttpServlet {
                 }
 
                     
-                break;
+                break; 
                 
             default:
-                    erro = getServletContext().getRequestDispatcher("/error.jsp");
+                    erro = getServletContext().getRequestDispatcher("error.jsp");
                     request.setAttribute("msg","Erro ao processar a solicitude ");
                     
-                    request.setAttribute("page","./cliente/PortalUser.jsp");
+                    request.setAttribute("page","cliente/PortalUser.jsp");
                     erro.forward(request, response);
                 break;
                

@@ -23,21 +23,7 @@ public class Funcionario extends Pessoa implements Serializable{
 
 
     public Funcionario(int id, String nick, String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha, String type) {
-        this.setId(id);
-        this.setNick(nick);
-        this.setNome(nome);
-        this.setCpf(cpf);
-        this.setEmail(email);
-        this.setRua(rua);
-        this.setNum(num);
-        this.setComplemento(complemento);        
-        this.setBairro(bairro);
-        this.setCep(cep);
-        this.setCidade(cidade); 
-        this.setEstado(estado);
-        this.setTelefone(telefone);
-        this.setType("F");
-        this.setSenha(senha);
+        super(id,nick,nome,cpf,email,rua,num,complemento,bairro,cep,cidade,estado,telefone,senha,type);
     }
     
         public Funcionario(String nick, String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha, String type) {
@@ -59,21 +45,7 @@ public class Funcionario extends Pessoa implements Serializable{
     
     
     public Funcionario(Pessoa p){
-        this.setId(p.getId());
-        this.setNick(p.getNick());
-        this.setNome(p.getNome());
-        this.setCpf(p.getCpf());
-        this.setEmail(p.getEmail());
-        this.setRua(p.getRua());
-        this.setNum(p.getNum());
-        this.setComplemento(p.getComplemento());        
-        this.setBairro(p.getBairro());
-        this.setCep(p.getCep());
-        this.setCidade(p.getCidade()); 
-        this.setEstado(p.getEstado());
-        this.setTelefone(p.getTelefone());
-        this.setType("F");
-        this.setSenha(p.getSenha());
+        super(p);
     }
 
     public List<Atendimento> getAtendimentos() {
@@ -81,6 +53,7 @@ public class Funcionario extends Pessoa implements Serializable{
     }
 
     public void setAtendimentos(List<Atendimento> atendimentos) {
+        this.atendimentos = new ArrayList<>();
         for(Atendimento a: atendimentos){
             this.atendimentos.add(a);
         }

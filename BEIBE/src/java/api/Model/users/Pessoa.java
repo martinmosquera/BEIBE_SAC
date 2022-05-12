@@ -30,6 +30,24 @@ public class Pessoa implements Serializable{
 
     public Pessoa() {
     }
+    
+    public Pessoa(Pessoa p){
+        this.setId(p.getId());
+        this.setNick(p.getNick());
+        this.setNome(p.getNome());
+        this.setCpf(p.getCpf());
+        this.setEmail(p.getEmail());
+        this.setRua(p.getRua());
+        this.setNum(p.getNum());
+        this.setComplemento(p.getComplemento());        
+        this.setBairro(p.getBairro());
+        this.setCep(p.getCep());
+        this.setCidade(p.getCidade()); 
+        this.setEstado(p.getEstado());
+        this.setTelefone(p.getTelefone());
+        this.setType(p.getType());
+        this.setSenha(p.getSenha());
+    }
 
     public Pessoa(String nick,String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha,String type) {
         this.nick = nick;
@@ -67,6 +85,7 @@ public class Pessoa implements Serializable{
     }
 
     public Pessoa(String id, String nick, String nome, String cpf, String email, String rua, String num, String complemento, String bairro, String cep, String cidade, String estado, String telefone, String senha, String type) {
+        this.id = Integer.valueOf(id);
         this.nick = nick;
         this.nome = nome;
         this.cpf = cpf;

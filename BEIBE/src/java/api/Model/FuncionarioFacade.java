@@ -122,12 +122,13 @@ public class FuncionarioFacade {
           }
       }
       
-      public static void insereFuncionario(Funcionario f) throws AppException{
-          PessoaDao.inserir(f);
-        }
+      public static List<Atendimento> getListaAtendimentos() throws AppException{
       
-      public static void editaFunc(Funcionario f) throws AppException{
-          PessoaDao.atualizar(f);
-        }
+      try{
+          return AtendimentoDao.getAtendimentos();
+      }catch(GetAtendimentoException e){
+          throw new AppException(e);
+      }
+      }
 
 }

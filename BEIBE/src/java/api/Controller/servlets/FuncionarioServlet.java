@@ -76,11 +76,16 @@ public class FuncionarioServlet extends HttpServlet {
         RequestDispatcher erro;
         switch(action){
             
+            case "homeF":
+                request.getRequestDispatcher("funcionario/portalFuncionario.jsp").forward(request, response);
+                
+                break;
+            
             case "listar":    
                 try{
                     List<Atendimento> la = AtendimentoDao.getAtendimentos();
                     request.getSession().setAttribute("atendimentos", la);
-                    response.sendRedirect("./funcionario/TodosAtendimentosFuncionario.jsp");
+                    response.sendRedirect("funcionario/TodosAtendimentosFuncionario.jsp");
                 }catch(IOException | GetAtendimentoException e){
                         request.setAttribute("msg", "Nao foi possivel listar os atendimentos | "+e.getMessage());
                         request.setAttribute("form", "alterar");

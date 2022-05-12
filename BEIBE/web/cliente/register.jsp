@@ -21,13 +21,13 @@
     <body>
         <nav class="navbar navbar-light bg-light shadow-sm px-5 mb-4">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1280px-Bootstrap_logo.svg.png" height="30" class="d-inline-block align-top" alt="">
-            <a href="${url}/ClienteServlet?to=home" class="navbar-nav">Home</a>
-            <a href="${url}/ClienteServlet?to=sobre">Sobre</a>
-            <a href="${url}/ClienteServlet?to=login">Login</a>
+            <a href="ClienteServlet?to=home" class="navbar-nav">Home</a>
+            <a href="ClienteServlet?to=sobre">Sobre</a>
+            <a href="ClienteServlet?to=login">Login</a>
         </nav>
         <div class="container mb-4">
             <div class="d-flex align-items-center justify-content-center pb-5">
-                <form class="col-8 form-group" method="post" action="${url}/ClienteServlet?to=userNew">
+                <form class="col-8 form-group" method="post" action="ClienteServlet?to=userNew">
                     <div class="form-group mb-2">
                         <label for="nick">Nick Name:</label>
                         <input class="form-control" type="text" name="nick" placeholder="Nick Name" maxlength="100">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="form-group mb-2">
                         <label for="cpf">CPF:</label>
-                        <input class="form-control" type="text" id="cpf" name="cpf" placeholder="CPF" maxlength="100">
+                        <input class="form-control" type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="100">
                         <script type="text/javascript">$("#cpf").mask("000.000.000-00");</script>
                     </div>
                     <div class="form-group mb-2">
@@ -71,8 +71,37 @@
                         <input class="form-control" type="text" name="cidade" placeholder="Cidade">
                     </div>
                     <div class="form-group mb-2">
-                        <label for="estado">Estado:</label>
-                        <input class="form-control" type="text" name="estado" placeholder="Estado">
+                         <label for="estado">Estado:</label>
+                    <select class="form-select mb-2" id="estado" name="estado" placeholder="Estado">
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                        <option value="EX">Estrangeiro</option>
+                    </select>
                     </div>
                     <div class="form-group mb-2">
                         <label for="tel">Telefone:</label>

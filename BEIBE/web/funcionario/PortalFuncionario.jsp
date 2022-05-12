@@ -4,8 +4,9 @@
     Author     : dell
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:if test="${user == null}" >
-    <c:redirect url="${url}ClienteServlet"></c:redirect>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:if test="${empty user}" >
+    <c:redirect url="../ClienteServlet?to=home"></c:redirect>
 </c:if>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -23,15 +24,14 @@
                 </a>
                 <a href="${url}/FuncionarioServlet?to=listar"><button class="btn btn-light">Listar Todos</button></a><br/>
                 <a href="${url}/FuncionarioServlet?to=gCategoria"><button class="btn btn-light">Gerenciar Categorias</button></a><br/>
-                <a href="CadastroProduto.jsp"><button class="btn btn-light">Gerenciar Produtos</button></a><br/>
+                <a href="${url}/funcionario/CadastroProduto.jsp"><button class="btn btn-light">Gerenciar Produtos</button></a><br/>
                 <a href="${url}/LogoutServlet"><button class="btn btn-danger  w-100 m-2 ">Logout</button></a><br/>
         </nav>
         <div class="container">
             <div class="row">
-                <jsp:useBean id="user" class="api.Model.users.Funcionario" scope="session" />
-                <h1>Benvind@ <jsp:getProperty name="user" property="nick"/></h1>
+                <h1>Benvind@ ${sessionScope.user.nick}</h1>
                 <div class="col-8">
-                    <h1>Seus Atendimentos Em Aberto:</h1>
+                    <h1>Seus Atendimentos em Aberto:</h1>
                     <table class="table table-striped">
                       <tr>
                         <th>Atendimento</th>
@@ -40,14 +40,22 @@
                         <th>Status</th>
                         <th>Descricao</th>
                       </tr>
-                      <c:forEach items="${atendimentosAbertos}" var="atendimento">
-                        <tr>
-                          <th> ${atendimento.getId()} </th>
-                          <th> ${atendimento.getDatatime()} </th>
-                          <th> ${atendimento.getType()} </th>
-                          <th> ${atendimento.getStatus()} </th>
-                          <th> ${atendimento.getDescricao()} </th>
-                         </tr>
+                      <c:forEach items="${sessionScope.atendimentosTotal}" var="atendimento">
+                          <c:if test="${atendimento.funcionario.id == sessionScope.user.id}" >
+                              <c:if test="${atendimento.status == \"Aberto\"}" >
+                                  <tr>
+                                <th> ${atendimento.id} </th>
+                                <th> <fmt:formatDate value="${atendimento.data}" pattern="dd/MM/yyyy HH:mm:ss" /></th>
+                                <th> ${atendimento.type} </th>
+                                <th> ${atendimento.status} </th>
+                                <th><c:out value="${atendimento.descricao}" />  </th>
+                               </tr>
+                                  
+                              </c:if>
+
+                              
+                                
+                          </c:if>
                        </c:forEach>
 
                     </table>

@@ -6,9 +6,7 @@
 package api.Model.atendimento;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.util.Date;
 import api.Model.produto.Produto;
 import api.Model.users.Cliente;
 import api.Model.users.Funcionario;
@@ -20,9 +18,7 @@ import api.Model.users.Funcionario;
  */
 public class Atendimento implements Serializable{
     private int id;
-    private Timestamp datatime;
     private Date data;
-    private Time hora;
     private Cliente cliente;
     private Funcionario funcionario;
     private String status;
@@ -30,91 +26,25 @@ public class Atendimento implements Serializable{
     private String type;
     private String descricao;
     private String solucao;
-    private Timestamp datatimef;
     private Date data_end;
-    private Time hora_end;
 
     public Atendimento() {
     }
-    
-    public Atendimento(Cliente cliente,String type,Produto produto,String descricao){
-    this.cliente = cliente;
-    this.type = type;
-    this.produto = produto;
-    this.descricao = descricao;
-    
-    }
 
-    public Atendimento(Date data, Time hora, Cliente cliente, String status, Produto produto, String type, String descricao) {
-        this.data = data;
-        this.hora = hora;
-        this.cliente = cliente;
-        this.status = status;
-        this.produto = produto;
-        this.type = type;
-        this.descricao = descricao;
-    }
-
-    public Atendimento(int id, Date date, int cliente_id, int funcionario_id, String status, int produto_id, String type, String descricao, String solucao) {
+    public Atendimento(int id, Date data, Cliente cliente, Funcionario funcionario, String status, Produto produto, String type, String descricao, String solucao, Date data_end) {
         this.id = id;
         this.data = data;
-        this.hora = hora;
         this.cliente = cliente;
+        this.funcionario = funcionario;
         this.status = status;
         this.produto = produto;
         this.type = type;
         this.descricao = descricao;
         this.solucao = solucao;
+        this.data_end = data_end;
     }
-
-    public Atendimento(int idA, Date date,Time hora, Cliente cliente, String status, Produto pr, String type, String descricao) {
-        this.id = idA;
-        this.data = date;
-        this.hora = hora;
-        this.cliente = cliente;
-        this.status = status;
-        this.produto = pr;
-        this.type = type;
-        this.descricao = descricao;
-    }
-      public Atendimento(int idA, Timestamp tmst, Cliente cliente, String status, Produto pr, String type, String descricao) {
-    this.id =idA;
-    this.datatime = tmst;
-    this.cliente = cliente;
-    this.type = type;
-    this.status = status;
-    this.produto = pr;
-    this.descricao = descricao;
-    }
-
-    public Atendimento(int idA, Timestamp tmst, String status, String type, Funcionario funcionario, String descricao) {
-       this.id =idA;
-        this.datatime = tmst;
-        this.status = status;
-        this.type = type;
-        this.funcionario = funcionario;
-        this.descricao = descricao; 
-    }
-
-    public Atendimento(int id, Timestamp tmst, Timestamp tmst2, Cliente cliente, String status, Produto pr, String type, String descricao) {
-        this.id = id;
-        this.datatime = tmst;
-        this.datatimef = tmst2;
-        this.cliente = cliente;
-        this.status = status;
-        this.produto = pr;
-        this.type = type;
-        this.descricao = descricao;
-    }
-
-    public Timestamp getDatatime() {
-        return datatime;
-    }
-
-    public void setDatatime(Timestamp datatime) {
-        this.datatime = datatime;
-    }
-
+    
+   
     public int getId() {
         return id;
     }
@@ -130,15 +60,7 @@ public class Atendimento implements Serializable{
     public void setData(Date data) {
         this.data = data;
     }
-
-    public Time getHora() {
-        return hora;
-    }
-
-    public void setHora(Time hora) {
-        this.hora = hora;
-    }
-
+    
     public Cliente getCliente() {
         return cliente;
     }
@@ -194,29 +116,13 @@ public class Atendimento implements Serializable{
     public void setSolucao(String Solucao) {
         this.solucao = Solucao;
     }
-
-    public Timestamp getDatatimef() {
-        return datatimef;
-    }
-
-    public void setDatatimef(Timestamp datatimef) {
-        this.datatimef = datatimef;
-    }
-
+    
     public Date getData_end() {
         return data_end;
     }
 
     public void setData_end(Date data_end) {
         this.data_end = data_end;
-    }
-
-    public Time getHora_end() {
-        return hora_end;
-    }
-
-    public void setHora_end(Time hora_end) {
-        this.hora_end = hora_end;
     }
                             
 }

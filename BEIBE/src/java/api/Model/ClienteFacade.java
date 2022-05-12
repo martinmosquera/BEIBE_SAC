@@ -9,6 +9,7 @@ import api.Model.ConnectionFactory.ConnectionFactory;
 import api.Model.Exceptions.AppException;
 import api.Model.Exceptions.AtualizaClienteException;
 import api.Model.Exceptions.ErroGetClienteIdException;
+import api.Model.Exceptions.GetAtendimentoException;
 import api.Model.Exceptions.InserirAtendimentoException;
 import api.Model.Exceptions.InserirClienteException;
 import api.Model.Exceptions.getListaClienteException;
@@ -73,7 +74,7 @@ public class ClienteFacade {
      public static List<Atendimento> getListaAtendimentos() throws Exception{
          try{
              return AtendimentoDao.getAtendimentos();
-         }catch(Exception e){
+         }catch(GetAtendimentoException e){
              throw new AppException(e);
          }
      
